@@ -8,10 +8,22 @@
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.url }}">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.github.url }}/feed.xml">
 
-    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-    <!--<link rel="stylesheet" href="{{ "{{ site.github.url }}/css/bootstrap.min.css" }}"> -->
-    <!--<link rel="stylesheet" href="{{ "{{ site.github.url }}/css/main.css" }}"> -->
-    <link rel="stylesheet" href="{{ "{{ site.github.url }}/style.css" }}">
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/  
+    <link rel="stylesheet" href="{{ site.github.url }}/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="{{ site.github.url }}/css/main.css">  
+    <link rel="stylesheet" href="{{ "{{ site.github.url }}/style.css" }}"> -->
+
+  {% if page.common-css %}
+    {% for css in page.common-css %}
+      <link rel="stylesheet" href="{{ css | prepend: site.github.url | replace: '//', '/' }}" />
+    {% endfor %}
+  {% endif %}
+  {% if layout.common-css %}
+    {% for css in layout.common-css %}
+      <link rel="stylesheet" href="{{ css | prepend: site.github.url | replace: '//', '/' }}" />
+    {% endfor %}
+  {% endif %}  
 
 
     <!-- Custom Fonts -->
