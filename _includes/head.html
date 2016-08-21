@@ -8,26 +8,13 @@
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.url }}">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.github.url }}/feed.xml">
 
-
-    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/  
-    <link rel="stylesheet" href="{{ site.github.url }}/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="{{ site.github.url }}/css/main.css">  -->
-    <link rel="stylesheet" href="{{ "{{ site.github.url }}/style.css" }}"> 
-
-<!--  {% if page.common-css %}
-    {% for css in page.common-css %}
-      <link rel="stylesheet" href="{{ css | prepend: site.github.url | replace: '//', '/' }}" />
-    {% endfor %}
-  {% endif %}
-  {% if layout.common-css %}
-    {% for css in layout.common-css %}
-      <link rel="stylesheet" href="{{ css | prepend: site.github.url | replace: '//', '/' }}" />
-    {% endfor %}
-  {% endif %}   -->
-
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/   
+    <link rel="stylesheet" href="{{ "/css/bootstrap.min.css"}}"> 
+    <link rel="stylesheet" href="{{ "/css/main.css" }}" >  -->
+    <link rel="stylesheet" href="/css/style.css"> 
 
     <!-- Custom Fonts -->
-    <link rel="stylesheet" href="{{ "{{ site.github.url }}/css/font-awesome/css/font-awesome.min.css" }}">
+    <link rel="stylesheet" href="{{ "/css/font-awesome/css/font-awesome.min.css" }}">
     <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
