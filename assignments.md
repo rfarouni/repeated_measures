@@ -19,7 +19,7 @@ layout: default
 <div class="posts">
   <div class="content.b full-bleed" id="recent-posts">
   {% for post in site.posts limit:25 %}<a
-    href="{{ post.url }}" class="post-excerpt{% if post.img %} photo{% endif %}">
+    href="{{ site.baseurl }}{{ post.url }}" class="post-excerpt{% if post.img %} photo{% endif %}">
       <div class="padded-content">
       {% if post.img %}
         <div class="image" style="background-image:url('{{ site.baseurl }}/img/portfolio/{{ post.img }}')"></div>
