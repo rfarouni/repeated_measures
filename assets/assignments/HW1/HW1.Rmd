@@ -102,7 +102,7 @@ and the fitted values are
 
 $$\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol \beta} = \mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}$$
 
-The next three question will involve working with the following data:
+The next three question involves working with the following data:
 
 
 ```{r}
@@ -112,7 +112,7 @@ y <-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )
 
 ## Question 1: 
 
-Compute  the vector of estimated  parameters $\hat{\boldsymbol \beta}$ for the simple regression problem give the data provided above.
+Compute the vector of estimated parameters $\hat{\boldsymbol \beta}$ for the simple regression problem given the data provided above.
 
 ```{r}
 # answer here
@@ -145,7 +145,7 @@ Obtain $\mathbf{H}$ for the data given above
 # answer here
 ```
 
-Now play with the interactive visualization [here](http://setosa.io/ev/ordinary-least-squares-regression/) and try to figure out what kind of tranformation $\hat{\mathbf{H}}$ accomplished. The answer is one word only. Think about the dimension of $\mathbf{H}$ with relation to the dimension of the data vector $\mathbf{y}$  
+Now play with the interactive visualization [here](http://setosa.io/ev/ordinary-least-squares-regression/) and try to figure out what kind of tranformation $\hat{\mathbf{H}}$ accomplished. The answer is one word only. Think about the dimension of $\mathbf{H}$ in relation with the dimension of the data vector $\mathbf{y}$  
 
 
 ```{r}
