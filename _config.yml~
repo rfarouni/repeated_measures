@@ -43,7 +43,7 @@ address:
   - line: Columbus, Ohio.
 
 # Credits content
-credits: The website uses the Freelancer open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.
+credits: The website uses the Freelancer open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.'
 
 # Build settings
 markdown: kramdown
