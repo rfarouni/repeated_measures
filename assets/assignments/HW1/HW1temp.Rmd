@@ -1,0 +1,179 @@
+
+---
+title: "Homework 1: Matrix Algebra"
+author: "Rick Farouni"
+date: "August 22, 2016"
+output: 
+   html_document:
+      toc: true
+---
+
+```{r echo=FALSE}
+options(digits = 3)
+```
+
+# Introduction
+This section shows how to perform some matrix operations in R.
+
+### Creating a Matrix
+
+In R, the basic data structure is a vector. A matrix is basically a vector with a dimension attribute, dim() .
+To create a matrix, we use the matrix() function. This function has the following arguments:
+
+```{r}
+args(matrix)
+# fill matrix by column (default)
+```
+Here we populate the matrix with a vector
+```{r}
+v <- c(1, 2, 3, 4, 5, 6)
+v
+M <-  matrix(v , nrow = 2, ncol = 3)
+M
+```
+
+### Matrix operations
+
+1. Matrix transpose $\mathbf{M}^T$
+
+```{r}
+Mt <-  t(M)
+Mt
+```
+
+2. Matrix multiplication $\mathbf{M} \mathbf{M}^T$
+
+
+```{r}
+MMt <-  M %*% Mt
+MMt
+```
+
+3. Matrix addition $\mathbf{M} + \mathbf{M}$
+
+```{r}
+dM <-  M + M
+dM
+```
+
+4. Matrix inverse ${(\mathbf{M} \mathbf{M}^T)}^{-1}$
+
+```{r}
+MMt_inverse <-  solve(MMt)
+MMt_inverse
+```
+
+# Questions
+
+Consider the simple regression model 
+
+$$y_i = \beta_0 + \beta_1 x_i +\epsilon_i  \textrm{    for  } i= 1, 2, \ldots ,n $$ 
+In matrix form, the regression model can be represented as
+
+$$\begin{bmatrix}
+y_{1} \\ 
+\vdots\\ 
+y_{n}
+\end{bmatrix} =
+\begin{bmatrix} 
+1 &  x_{1} \\
+\vdots\\
+1 & x_{n}
+\end{bmatrix}
+\begin{bmatrix} 
+\beta_{0} \\ 
+\beta_{1}
+\end{bmatrix}
++
+\begin{bmatrix} 
+\epsilon_{1} \\ 
+\vdots\\ 
+\epsilon_{n}
+\end{bmatrix}$$
+or more concisly as 
+
+$$\mathbf{y} =\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$$
+
+It can be shown that the estimated parameters are
+
+$$\hat{\boldsymbol \beta} = \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}$$
+
+and the fitted values are
+
+$$\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol \beta} = \mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}$$
+
+The next three question will involve working with the following data:
+
+
+```{r}
+x <- c(10, 8, 13, 9, 11, 14, 6 , 4, 12, 7 ,5 )
+y <-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )
+```
+
+## Question 1: 
+
+Compute  the vector of estimated  parameters $\hat{\boldsymbol \beta}$ for the simple regression problem give the data provided above.
+
+```{r}
+# answer here
+```
+
+## Question 2:
+
+Obtain the fitted values, the vector $\hat{\mathbf{y}}$, by using matrix multiplication
+
+
+```{r}
+# answer here
+```
+
+## Question 3: 
+
+Obtain the vector of residuals $\hat{\boldsymbol{\epsilon}}$. Note that the vector of residuals has a hat on it, whereas the vector of errors $\boldsymbol{\epsilon}$ doesn't. Now you know the difference!
+
+```{r}
+# answer here
+```
+## Question 4: 
+
+When you ever see a matrix, think *transformation*! In the equation for obtaining the fitted values above, we see that $\mathbf{y}$ gets multiplied (transformed) by several matrices to give us $\hat{\mathbf{y}}$. Let's denote the result of these multiplications by  
+$$\mathbf{H}=\mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}}$$
+
+Obtain $\mathbf{H}$ for the data given above
+
+```{r}
+# answer here
+```
+
+Now play with the interactive visualization [here](http://setosa.io/ev/ordinary-least-squares-regression/) and try to figure out what kind of tranformation $\hat{\mathbf{H}}$ accomplished. The answer is one word only. Think about the dimension of $\mathbf{H}$ with relation to the dimension of the data vector $\mathbf{y}$  
+
+
+```{r}
+# answer here
+```
+
+
+
+
+
+
+
+
+
+
+
+<!-- X<-cbind(1,x) -->
+
+<!-- (t(X)%*%X) -->
+
+<!-- 9.14	7.46	8.0	6.58 -->
+<!-- 8.14	6.77	8.0	5.76 -->
+<!-- 8.74	12.74	8.0	7.71 -->
+<!-- 8.77	7.11	8.0	8.84 -->
+<!-- 9.26	7.81	8.0	8.47 -->
+<!-- 8.10	8.84	8.0	7.04 -->
+<!-- 6.0		8.0	5.25 -->
+<!-- 3.10	5.39	19.0	12.50 -->
+<!-- 9.13	8.15	8.0	5.56 -->
+<!-- 7.26	6.42	8.0	7.91 -->
+<!-- 4.74	5.73	8.0	6.89 -->
