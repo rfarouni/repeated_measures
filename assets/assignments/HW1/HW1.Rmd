@@ -112,7 +112,7 @@ y <-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )
 
 ## Question 1: 
 
-Compute the vector of estimated parameters $\hat{\boldsymbol \beta}$ for the simple regression problem given the data provided above. Hint: A fast way to create the matrix X uses the columb bind *cbind()* function to bind two vectors into a matrix. In R, if one element is a scalar, the *rbind()* function broadcasts (transforms) the scalar into a vector.
+Compute the vector of estimated parameters $\hat{\boldsymbol \beta}$ for the simple regression problem given the data provided above. Hint: A fast way to create the matrix X uses the columb bind *cbind()* function to bind two vectors into a matrix. In R, if one element is a scalar, the *cbind()* function broadcasts (transforms) the scalar into a vector.
 
 ```{r}
 # answer here
