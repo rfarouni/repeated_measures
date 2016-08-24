@@ -217,7 +217,7 @@ y_{n}
 \epsilon_{1} \\ 
 \vdots\\ 
 \epsilon_{n}
-\end{bmatrix}\]</span> or more concisly as</p>
+\end{bmatrix}\]</span> or more concisely as</p>
 <p><span class="math display">\[\mathbf{y} =\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}\]</span></p>
 <p>It can be shown that the estimated parameters are</p>
 <p><span class="math display">\[\hat{\boldsymbol \beta} = \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}\]</span></p>
@@ -228,7 +228,7 @@ y_{n}
 y &lt;-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )</code></pre>
 <div id="question-1" class="section level2">
 <h2>Question 1:</h2>
-<p>Compute the vector of estimated parameters <span class="math inline">\(\hat{\boldsymbol \beta}\)</span> for the simple regression problem given the data provided above.</p>
+<p>Compute the vector of estimated parameters <span class="math inline">\(\hat{\boldsymbol \beta}\)</span> for the simple regression problem given the data provided above. Hint: A fast way to create the matrix X uses the columb bind <em>cbind()</em> function to bind two vectors into a matrix. In R, if one element is a scalar, the <em>rbind()</em> function broadcasts (transforms) the scalar into a vector.</p>
 <pre class="r"><code># answer here</code></pre>
 </div>
 <div id="question-2" class="section level2">
