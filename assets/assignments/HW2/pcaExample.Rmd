@@ -1,0 +1,126 @@
+---
+title: "Example for HW2"
+author: "Rick Farouni"
+date: "September 12, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+```
+
+## PCA
+
+First, lets read the data, extract the variables we need, then center and optionaly scale the data. 
+```{r }
+strength_df <- read.table("~/Documents/repos/PSYCH7821/assets/assignments/HW2/strength.csv", header = TRUE)
+
+X <- as.matrix(scale(strength_df[ , 6:11],
+                       center = TRUE, 
+                       scale = TRUE)
+               )
+
+X
+```
+
+You can fit the model with a single call to the function prcomp like this
+
+```{r }
+
+pca_fit <- prcomp(X)
+```
+
+The proportion of variance explained can be obtained using the summary function
+```{r }
+
+summary(pca_fit)
+
+```
+
+Now pca_fit is a list with three objects (rotation, sdev, X). You can access the objects with the $ operator, so for example:
+
+Q is the loading matrix (eigenvectors)
+
+```{r}
+Q <- pca_fit$rotation 
+Q
+```
+
+sigma is the vector of standard deviations
+```{r}
+sigma <- pca_fit$sdev 
+sigma 
+```
+
+Z is the matrix of sample PC scores
+
+```{r}
+Z <- X %*% Q 
+Z
+```
+
+F (pattern matrix) is the loadings multiplied by a scaling factor 
+
+```{r}
+F <- Q %*% diag(sigma)
+F
+```
+
+To extract the first factor, use subsetting with []. For example, the first factor is 
+
+```{r}
+f1 <- F[ , 1]
+as.matrix(f1)
+```
+
+sample PC scores scaled
+
+```{r}
+Zs <- Z %*% diag(1/sigma)
+Zs
+```
+
+The first standardized principle component pc1
+```{r}
+z1 <- Zs[ , 1]
+as.matrix(z1)
+```
+
+
+
+## plots
+```{r }
+biplot(pca_fit, scale = 0)
+plot(pca_fit)
+```
+
+
+## comparison with SVD (Advanced)
+```{r }
+svd_fit <- svd(X)
+
+# singular values
+
+Sigma_svd <- diag(svd_fit$d)
+Sigma_svd 
+
+#the left singular vectors 
+U  <- svd_fit$u
+U
+#the right singular vectors
+Q <- svd_fit$v
+Q
+
+#reconstuction error residual
+res <- X - U %*% Sigma_svd %*% t(Q)
+res 
+
+Z_svd1 <- U %*% Sigma_svd 
+Z_svd1
+
+Z_svd2 <- X %*% Q
+Z_svd2
+
+```
+

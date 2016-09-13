@@ -1,15 +1,15 @@
 
 ---
-title: "Homework 1: Matrix Algebra"
+title: 'Homework 1: Matrix Algebra'
 author: "Rick Farouni"
 date: "August 22, 2016"
-output: 
-   html_document:
-      toc: true
+output:
+  html_document:
+    toc: yes
 ---
 
 ```{r echo=FALSE}
-options(digits = 3)
+options(digits = 2)
 ```
 
 # Introduction
@@ -90,7 +90,7 @@ y_{n}
 \vdots\\ 
 \epsilon_{n}
 \end{bmatrix}$$
-or more concisly as 
+or more concisely as 
 
 $$\mathbf{y} =\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$$
 
@@ -102,7 +102,7 @@ and the fitted values are
 
 $$\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol \beta} = \mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}$$
 
-The next three question will involve working with the following data:
+The next three question involves working with the following data:
 
 
 ```{r}
@@ -112,68 +112,88 @@ y <-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )
 
 ## Question 1: 
 
-Compute  the vector of estimated  parameters $\hat{\boldsymbol \beta}$ for the simple regression problem give the data provided above.
+Compute the vector of estimated parameters $\hat{\boldsymbol \beta}$ for the simple regression problem given the data provided above.
+
+#### Solution: 
+
+First we need to the column vector of ones. The cbind function binds the two vectors into a matrix. 
+```{r}
+X <- cbind(1, x)
+Xt <- t(X)
+beta_hat <- solve(Xt %*% X) %*% Xt %*% y
+beta_hat
+```
+
+Let's compare our solution with the built-in linear model fit function. The results are identical.
 
 ```{r}
-# answer here
+model_fit <- lm.fit(X, y)
+cbind(beta_hat, lmfit = model_fit$coefficients)
 ```
 
 ## Question 2:
 
 Obtain the fitted values, the vector $\hat{\mathbf{y}}$, by using matrix multiplication
 
+#### Solution: 
 
 ```{r}
-# answer here
+y_hat <- X %*% beta_hat 
+y_hat 
+```
+
+let's compare
+```{r}
+cbind(y_hat, lmfit = model_fit$fitted.values)
 ```
 
 ## Question 3: 
 
 Obtain the vector of residuals $\hat{\boldsymbol{\epsilon}}$. Note that the vector of residuals has a hat on it, whereas the vector of errors $\boldsymbol{\epsilon}$ doesn't. Now you know the difference!
 
+#### Solution: 
+
+
 ```{r}
-# answer here
+epsilon_hat <- y - y_hat
+epsilon_hat
 ```
+
+let's compare
+```{r}
+cbind(epsilon_hat, lmfit = model_fit$residuals)
+```
+
+Note: MSE (mean squared error) is just 
+
+```{r}
+mean(epsilon_hat ^ 2)
+```
+
+
 ## Question 4: 
 
 When you ever see a matrix, think *transformation*! In the equation for obtaining the fitted values above, we see that $\mathbf{y}$ gets multiplied (transformed) by several matrices to give us $\hat{\mathbf{y}}$. Let's denote the result of these multiplications by  
 $$\mathbf{H}=\mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}}$$
 
-Obtain $\mathbf{H}$ for the data given above
+Obtain $\mathbf{H}$ for the data given above.
 
-```{r}
-# answer here
-```
-
-Now play with the interactive visualization [here](http://setosa.io/ev/ordinary-least-squares-regression/) and try to figure out what kind of tranformation $\hat{\mathbf{H}}$ accomplished. The answer is one word only. Think about the dimension of $\mathbf{H}$ with relation to the dimension of the data vector $\mathbf{y}$  
+#### Solution: 
 
 
 ```{r}
-# answer here
+H <- X %*% solve(Xt %*% X) %*% Xt
+H
 ```
 
+Now play with the interactive visualization [here](http://setosa.io/ev/ordinary-least-squares-regression/) and try to figure out what kind of tranformation $\hat{\mathbf{H}}$ accomplished. The answer is one word only. Think about the dimension of $\mathbf{H}$ in relation with the dimension of the data vector $\mathbf{y}$  
+
+#### Solution: 
+
+H is a projection matrix with dimensions 11 by 11, which is also the number of observations we have. The matrix projects the data into points residing on a two-dimensional plane "determined" (spanned by the columns) of $\mathbf{X}$
+
+
+By the  way, the data is taken from [Anscombe's_quartet](https://www.wikiwand.com/en/Anscombe's_quartet).
 
 
 
-
-
-
-
-
-
-
-<!-- X<-cbind(1,x) -->
-
-<!-- (t(X)%*%X) -->
-
-<!-- 9.14	7.46	8.0	6.58 -->
-<!-- 8.14	6.77	8.0	5.76 -->
-<!-- 8.74	12.74	8.0	7.71 -->
-<!-- 8.77	7.11	8.0	8.84 -->
-<!-- 9.26	7.81	8.0	8.47 -->
-<!-- 8.10	8.84	8.0	7.04 -->
-<!-- 6.0		8.0	5.25 -->
-<!-- 3.10	5.39	19.0	12.50 -->
-<!-- 9.13	8.15	8.0	5.56 -->
-<!-- 7.26	6.42	8.0	7.91 -->
-<!-- 4.74	5.73	8.0	6.89 -->

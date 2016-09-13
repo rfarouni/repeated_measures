@@ -189,9 +189,9 @@ dM</code></pre>
 </ol>
 <pre class="r"><code>MMt_inverse &lt;-  solve(MMt)
 MMt_inverse</code></pre>
-<pre><code>##       [,1]  [,2]
-## [1,]  2.33 -1.83
-## [2,] -1.83  1.46</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]  2.3 -1.8
+## [2,] -1.8  1.5</code></pre>
 </div>
 </div>
 <div id="questions" class="section level1">
@@ -228,27 +228,138 @@ y_{n}
 y &lt;-  c(8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68 )</code></pre>
 <div id="question-1" class="section level2">
 <h2>Question 1:</h2>
-<p>Compute the vector of estimated parameters <span class="math inline">\(\hat{\boldsymbol \beta}\)</span> for the simple regression problem given the data provided above. Hint: A fast way to create the matrix <span class="math inline">\(\mathbf{X}\)</span> uses the column bind function, <em>cbind()</em>, to bind two vectors into a matrix. In R, if one element is a scalar, the <em>cbind()</em> function broadcasts (transforms) the scalar into a vector.</p>
-<pre class="r"><code># answer here</code></pre>
+<p>Compute the vector of estimated parameters <span class="math inline">\(\hat{\boldsymbol \beta}\)</span> for the simple regression problem given the data provided above.</p>
+<div id="solution" class="section level4">
+<h4>Solution:</h4>
+<p>First we need to the column vector of ones. The cbind function binds the two vectors into a matrix.</p>
+<pre class="r"><code>X &lt;- cbind(1, x)
+Xt &lt;- t(X)
+beta_hat &lt;- solve(Xt %*% X) %*% Xt %*% y
+beta_hat</code></pre>
+<pre><code>##   [,1]
+##    3.0
+## x  0.5</code></pre>
+<p>Let’s compare our solution with the built-in linear model fit function. The results are identical.</p>
+<pre class="r"><code>model_fit &lt;- lm.fit(X, y)
+cbind(beta_hat, lmfit = model_fit$coefficients)</code></pre>
+<pre><code>##       lmfit
+##   3.0   3.0
+## x 0.5   0.5</code></pre>
+</div>
 </div>
 <div id="question-2" class="section level2">
 <h2>Question 2:</h2>
 <p>Obtain the fitted values, the vector <span class="math inline">\(\hat{\mathbf{y}}\)</span>, by using matrix multiplication</p>
-<pre class="r"><code># answer here</code></pre>
+<div id="solution-1" class="section level4">
+<h4>Solution:</h4>
+<pre class="r"><code>y_hat &lt;- X %*% beta_hat 
+y_hat </code></pre>
+<pre><code>##       [,1]
+##  [1,]  8.0
+##  [2,]  7.0
+##  [3,]  9.5
+##  [4,]  7.5
+##  [5,]  8.5
+##  [6,] 10.0
+##  [7,]  6.0
+##  [8,]  5.0
+##  [9,]  9.0
+## [10,]  6.5
+## [11,]  5.5</code></pre>
+<p>let’s compare</p>
+<pre class="r"><code>cbind(y_hat, lmfit = model_fit$fitted.values)</code></pre>
+<pre><code>##            lmfit
+##  [1,]  8.0   8.0
+##  [2,]  7.0   7.0
+##  [3,]  9.5   9.5
+##  [4,]  7.5   7.5
+##  [5,]  8.5   8.5
+##  [6,] 10.0  10.0
+##  [7,]  6.0   6.0
+##  [8,]  5.0   5.0
+##  [9,]  9.0   9.0
+## [10,]  6.5   6.5
+## [11,]  5.5   5.5</code></pre>
+</div>
 </div>
 <div id="question-3" class="section level2">
 <h2>Question 3:</h2>
 <p>Obtain the vector of residuals <span class="math inline">\(\hat{\boldsymbol{\epsilon}}\)</span>. Note that the vector of residuals has a hat on it, whereas the vector of errors <span class="math inline">\(\boldsymbol{\epsilon}\)</span> doesn’t. Now you know the difference!</p>
-<pre class="r"><code># answer here</code></pre>
+<div id="solution-2" class="section level4">
+<h4>Solution:</h4>
+<pre class="r"><code>epsilon_hat &lt;- y - y_hat
+epsilon_hat</code></pre>
+<pre><code>##         [,1]
+##  [1,]  0.039
+##  [2,] -0.051
+##  [3,] -1.921
+##  [4,]  1.309
+##  [5,] -0.171
+##  [6,] -0.041
+##  [7,]  1.239
+##  [8,] -0.740
+##  [9,]  1.839
+## [10,] -1.681
+## [11,]  0.179</code></pre>
+<p>let’s compare</p>
+<pre class="r"><code>cbind(epsilon_hat, lmfit = model_fit$residuals)</code></pre>
+<pre><code>##               lmfit
+##  [1,]  0.039  0.039
+##  [2,] -0.051 -0.051
+##  [3,] -1.921 -1.921
+##  [4,]  1.309  1.309
+##  [5,] -0.171 -0.171
+##  [6,] -0.041 -0.041
+##  [7,]  1.239  1.239
+##  [8,] -0.740 -0.740
+##  [9,]  1.839  1.839
+## [10,] -1.681 -1.681
+## [11,]  0.179  0.179</code></pre>
+<p>Note: MSE (mean squared error) is just</p>
+<pre class="r"><code>mean(epsilon_hat ^ 2)</code></pre>
+<pre><code>## [1] 1.3</code></pre>
+</div>
 </div>
 <div id="question-4" class="section level2">
 <h2>Question 4:</h2>
 <p>When you ever see a matrix, think <em>transformation</em>! In the equation for obtaining the fitted values above, we see that <span class="math inline">\(\mathbf{y}\)</span> gets multiplied (transformed) by several matrices to give us <span class="math inline">\(\hat{\mathbf{y}}\)</span>. Let’s denote the result of these multiplications by<br />
 <span class="math display">\[\mathbf{H}=\mathbf{X} \left( \mathbf{X}^{\mathsf{T}} \mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}}\]</span></p>
-<p>Obtain <span class="math inline">\(\mathbf{H}\)</span> for the data given above</p>
-<pre class="r"><code># answer here</code></pre>
+<p>Obtain <span class="math inline">\(\mathbf{H}\)</span> for the data given above.</p>
+<div id="solution-3" class="section level4">
+<h4>Solution:</h4>
+<pre class="r"><code>H &lt;- X %*% solve(Xt %*% X) %*% Xt
+H</code></pre>
+<pre><code>##        [,1]  [,2]   [,3]  [,4]     [,5]     [,6]    [,7]   [,8]    [,9]
+##  [1,] 0.100 0.082  0.127 0.091  1.1e-01  1.4e-01  0.0636  0.045  0.1182
+##  [2,] 0.082 0.100  0.055 0.091  7.3e-02  4.5e-02  0.1182  0.136  0.0636
+##  [3,] 0.127 0.055  0.236 0.091  1.6e-01  2.7e-01 -0.0182 -0.091  0.2000
+##  [4,] 0.091 0.091  0.091 0.091  9.1e-02  9.1e-02  0.0909  0.091  0.0909
+##  [5,] 0.109 0.073  0.164 0.091  1.3e-01  1.8e-01  0.0364  0.000  0.1455
+##  [6,] 0.136 0.045  0.273 0.091  1.8e-01  3.2e-01 -0.0455 -0.136  0.2273
+##  [7,] 0.064 0.118 -0.018 0.091  3.6e-02 -4.5e-02  0.1727  0.227  0.0091
+##  [8,] 0.045 0.136 -0.091 0.091 -5.6e-17 -1.4e-01  0.2273  0.318 -0.0455
+##  [9,] 0.118 0.064  0.200 0.091  1.5e-01  2.3e-01  0.0091 -0.045  0.1727
+## [10,] 0.073 0.109  0.018 0.091  5.5e-02 -1.1e-16  0.1455  0.182  0.0364
+## [11,] 0.055 0.127 -0.055 0.091  1.8e-02 -9.1e-02  0.2000  0.273 -0.0182
+##       [,10]  [,11]
+##  [1,] 0.073  0.055
+##  [2,] 0.109  0.127
+##  [3,] 0.018 -0.055
+##  [4,] 0.091  0.091
+##  [5,] 0.055  0.018
+##  [6,] 0.000 -0.091
+##  [7,] 0.145  0.200
+##  [8,] 0.182  0.273
+##  [9,] 0.036 -0.018
+## [10,] 0.127  0.164
+## [11,] 0.164  0.236</code></pre>
 <p>Now play with the interactive visualization <a href="http://setosa.io/ev/ordinary-least-squares-regression/">here</a> and try to figure out what kind of tranformation <span class="math inline">\(\hat{\mathbf{H}}\)</span> accomplished. The answer is one word only. Think about the dimension of <span class="math inline">\(\mathbf{H}\)</span> in relation with the dimension of the data vector <span class="math inline">\(\mathbf{y}\)</span></p>
-<pre class="r"><code># answer here</code></pre>
+</div>
+<div id="solution-4" class="section level4">
+<h4>Solution:</h4>
+<p>H is a projection matrix with dimensions 11 by 11, which is also the number of observations we have. The matrix projects the data into points residing on a two-dimensional plane “determined” (spanned by the columns) of <span class="math inline">\(\mathbf{X}\)</span></p>
+<p>By the way, the data is taken from <a href="https://www.wikiwand.com/en/Anscombe's_quartet">Anscombe’s_quartet</a>.</p>
+</div>
 </div>
 </div>
 

@@ -1,0 +1,89 @@
+---
+title: "Path Analysis Example"
+author: "Rick Farouni"
+date: "September 12, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+```
+
+
+### Load required libraries
+```{r , echo = FALSE}
+library(lavaan)
+library(semPlot)
+```
+
+### Assign the summarized data to a character vector
+
+```{r }
+
+lower <- '
+   1.0
+  .16      1.0,
+  .24,    -.43,    1.0,
+  .31,     .05,    .07,    1.0 '
+
+```
+
+
+### Convert to a full symmetric covariance/correlation matrix with names
+
+```{r }
+exercise_cor <- getCov(lower,
+                       names = c("exercise",
+                                 "food",
+                                 "wt_loss",
+                                 "attitude"))
+```
+
+### Specify Model and assign it to a character vector
+
+```{r }
+exercise_model <- '
+   # regressions
+     exercise ~ attitude
+     food ~ exercise
+     wt_loss ~ exercise + food
+'
+```
+
+### fit the model
+
+```{r }
+model_fit <- sem(exercise_model,
+           sample.cov = exercise_cor,
+           sample.nobs = 767)
+```
+### Print the named list describing the model parameters
+```{r }
+parTable(model_fit)
+```
+
+### Print a summary of the model estimates. Also, print the standardized solution, additional fit measures, and confidence intervals.
+```{r }
+summary(model_fit,
+        standardized = TRUE,
+        fit.measures = TRUE,
+        ci = TRUE)
+```
+
+### Print a data.frame containing standardized model parameters.
+
+```{r }
+standardizedSolution(model_fit)
+```
+
+### Plot the path diagram
+```{r }
+semPaths(model_fit,
+         "par",
+         style = "ram",
+         layout = "spring")
+```
+
+
+
