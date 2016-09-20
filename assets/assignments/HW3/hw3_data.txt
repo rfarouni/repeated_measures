@@ -1,0 +1,50 @@
+
+Exercise and weight loss
+N=767
+exercise  food  wt_loss   attitude
+ 1   
+.16   1    
+.24 -.43   1    
+.31  .05  .07   1 
+
+====================================================
+
+Arbuckle's analysis of Felson & Bornstedt's data
+N=209
+academic athletic attract GPA height weight rating
+ 1    
+.43   1    
+.50  .48   1    
+.49  .22  .32   1    
+.10 -.04 -.03  .18   1    
+.04  .02 -.16 -.10  .34   1    
+.09  .14  .43  .15 -.16 -.27   1
+
+===================================================
+
+SES, IQ and Need Achievement
+N = 306
+SES IQ nAch GPA
+ 1
+.30   1
+.41 .16   1
+.33 .57 .50   1
+
+===================================================
+
+Social status, actual and perceived income
+y1 = subjective income, 
+y2 = subjective occupational prestige,
+y3 = subjective social status, 
+x1 = actual income,
+x2 = actual occupational prestige
+N=432
+    y1      y2      y3      x1      x2
+ 1.0000 
+ 0.3670  1.0000 
+ 0.5103  0.4310  1.0000 
+ 0.3633  0.1840  0.2772  1.0000 
+ 0.1574  0.2819  0.2311  0.2921  1.0000 
+
+
+
