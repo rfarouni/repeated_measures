@@ -1,0 +1,319 @@
+---
+title: "HW3 Template"
+author: "Your Name"
+date: "September 21, 2016"
+output: html_document
+geometry: margin=0.5in, voffset=0in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+options(digits = 3)
+```
+
+Load required libraries
+```{r , message = FALSE}
+library(lavaan)
+library(semPlot)
+```
+
+## Ex A
+
+1. Assign the summarized data to a character vector
+
+```{r }
+
+# Exercise and weight loss
+
+exercise_lower <- '
+   1.0
+  .16      1.0,
+  .24,    -.43,    1.0,
+  .31,     .05,    .07,    1.0 '
+
+# Sample size 
+N1 <- 767
+
+```
+
+2. Convert to a full symmetric covariance/correlation matrix with names
+
+```{r }
+exercise_cor <- getCov(exercise_lower,
+                       names = c("exercise",
+                                 "food",
+                                 "wt_loss",
+                                 "attitude"))
+```
+
+3. Specify model
+
+```{r }
+exercise_model <- '
+   # regressions
+     exercise ~ attitude
+     food ~ exercise
+     wt_loss ~ exercise + food '
+
+```
+
+4. fit the model
+
+```{r, message= FALSE }
+exercise_model_fit <- sem(exercise_model,
+           sample.cov = exercise_cor,
+           sample.nobs = N1)
+```
+
+5. Print a summary of the model estimates and print the standardized solution
+```{r }
+summary(exercise_model_fit,
+        standardized = TRUE)
+```
+
+
+6.Plot the path diagram
+```{r }
+semPaths(exercise_model_fit,
+         "par",
+         style = "ram",
+         layout = "spring")
+```
+
+## Ex B
+
+
+1. Assign the summarized data to a character vector
+
+```{r }
+# Arbuckle's analysis of Felson & Bornstedt's data
+
+Arbuckle_lower <- '
+ 1    
+.43   1    
+.50  .48   1    
+.49  .22  .32   1    
+.10 -.04 -.03  .18   1    
+.04  .02 -.16 -.10  .34   1    
+.09  .14  .43  .15 -.16 -.27   1 '
+
+# Sample size 
+N2 <- 209
+
+```
+
+
+2. Convert to a full symmetric covariance/correlation matrix with names
+
+```{r }
+Arbuckle_cor <- getCov(Arbuckle_lower,
+                       names = c("academic",
+                                 "athletic",
+                                 "attract",
+                                 "GPA",
+                                 "height",
+                                 "weight",
+                                 "rating"))
+
+```
+
+
+3. Specify model
+
+
+```{r }
+## replace the "**" with the model specification
+Arbuckle_model <- '
+   # regressions
+     ** ~ **
+     ** ~ **
+  # correlations
+     ** ~~ ** '
+```
+
+
+4. fit the model and print a summary of the model estimates.
+
+
+```{r }
+# replace the "**" with the correct parameters
+Arbuckle_model_fit <- sem( **,
+           sample.cov = **,
+           sample.nobs = **)
+```
+
+5. Print a summary of the model estimates and print the standardized solution
+
+```{r }
+summary(Arbuckle_model_fit,
+        standardized = TRUE)
+
+```
+
+
+We can also output a list of model matrices
+```{r }
+lavInspect(Arbuckle_model_fit, "est")
+
+```
+
+Note that the psi matrix corresponds to the following compound matrix in the notes 
+
+$$
+\begin{bmatrix}
+\boldsymbol \Psi  & \mathbf 0\\ 
+\mathbf 0 & \boldsymbol \Phi
+\end{bmatrix}
+$$
+
+and the beta matrix to 
+
+$$
+\begin{bmatrix}
+\mathbf B  & \boldsymbol \Gamma\\ 
+\mathbf 0 & \mathbf 0
+\end{bmatrix}
+$$
+
+5. Plot the path diagram
+```{r}
+semPaths(**,
+         "par",
+         style = "ram",
+         layout = "spring")
+```
+
+
+### EX 1
+
+1. Assign the summarized data to a character vector
+
+```{r }
+# SES, IQ and Need Achievement data
+
+SES_lower <- '
+ 1
+.30   1
+.41 .16   1
+.33 .57 .50   1'
+
+# Sample size
+N3 <- 306
+
+```
+
+2. Convert to a full symmetric covariance/correlation matrix with names
+
+```{r }
+
+SES_cor <- getCov(SES_lower,
+                       names = c("SES",
+                                 "IQ",
+                                 "nAch",
+                                 "GPA"))
+
+```
+
+3. Specify model
+```{r }
+SES_model <- '
+   # regressions
+     ** ~ **
+     ** ~ **
+  # correlations
+     ** ~~ ** '
+```
+
+
+4. Fit the model and print a summary of the model estimates.
+
+```{r, eval = FALSE}
+SES_model_fit <- sem(**,
+           sample.cov = **,
+           sample.nobs = **)
+
+summary(**,
+        standardized = TRUE)
+
+```
+
+We can also output a list of model matrices
+```{r}
+lavInspect(**, **)
+
+```
+
+5. Plot the path diagram
+```{r}
+semPaths(**,
+         "par",
+         style = "ram",
+         layout = "spring")
+```
+
+## EX 2
+
+1. Assign the summarized data to a character vector
+
+```{r }
+# Social status, actual and perceived income data
+income_lower <- '
+ 1.0000 
+ 0.3670  1.0000 
+ 0.5103  0.4310  1.0000 
+ 0.3633  0.1840  0.2772  1.0000 
+ 0.1574  0.2819  0.2311  0.2921  1.0000' 
+
+# Sample size
+N4 <- 432
+
+```
+
+2. Convert to a full symmetric covariance/correlation matrix with names
+
+```{r }
+income_cor <- getCov(income_lower,
+                       names = c("subj_income",
+                                 "subj_prestige",
+                                 "subj_status",
+                                 "actual_income",
+                                 "actual_prestige"))
+```
+
+3. Specify model
+```{r}
+income_model <- '
+   # regressions
+     ** ~ **
+  # correlations
+     ** ~~ ** '
+```
+
+4. Fit the model and print a summary of the model estimates.
+
+```{r}
+income_model_fit <- sem(**,
+           sample.cov = **,
+           sample.nobs = **)
+
+summary(**,
+        standardized = TRUE)
+
+```
+
+
+We can also output a list of model matrices
+```{r}
+lavInspect(**, **)
+
+```
+
+5. Plot the path diagram
+```{r}
+semPaths(**,
+         "par",
+         style = "ram",
+         layout = "spring")
+```
+
+
