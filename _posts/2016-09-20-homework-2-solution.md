@@ -18,7 +18,7 @@ description: "HW2 Solution"
 <div class="container">
        <div class="row">
 
-The data file can be downloaded <a href="{{ site.baseurl }}/assets/assignments/HW2/ex02_question1_data.txt" target="_blank"> here </a> and <a href="{{ site.baseurl }}/assets/assignments/HW2/ex02_question2_data.txt" target="_blank"> here </a>
+The two data files can be downloaded <a href="{{ site.baseurl }}/assets/assignments/HW2/ex02_question1_data.txt" target="_blank"> here </a> and <a href="{{ site.baseurl }}/assets/assignments/HW2/ex02_question2_data.txt" target="_blank"> here </a>.
 
 <div style='position: relative; width: 100%; height: 16000px; padding-bottom: 95%;'>
 <iframe style='position: absolute; left: 0px; top: 0px; width: 99%; height: 100%; z-index:1;'
