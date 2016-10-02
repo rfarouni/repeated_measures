@@ -21,7 +21,7 @@ description: "HW3 Solution"
 <div style='position: relative; width: 100%; height: 16000px; padding-bottom: 95%;'>
 <iframe style='position: absolute; left: 0px; top: 0px; width: 99%; height: 100%; z-index:1;'
         frameborder="0"  scrolling="no"
-       src="{{ site.baseurl }}/assets/assignments/HW2/hw3_solution.html"></iframe>
+       src="{{ site.baseurl }}/assets/assignments/HW3/hw3_solution.html"></iframe>
 </div>
 </div>
 </div>
