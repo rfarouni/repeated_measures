@@ -11,7 +11,7 @@ description: "HW3 Solution"
 <br>
 
 
-###  Homework 2 Solution
+###  Homework 3 Solution
 
 <hr class="star-primary">
 
