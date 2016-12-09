@@ -1,0 +1,44 @@
+---
+title: "Factor Analysis Example"
+output: html_document
+geometry: margin=0.5in, voffset=0in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+options(digits = 3)
+```
+
+```{r , message=FALSE}
+library(lavaan)
+library(semPlot)
+fa_lower <- '
+   1           
+  .828  1          
+  .776 .779  1         
+  .439 .493 .460  1        
+  .432 .464 .425 .674  1       
+  .447 .489 .443 .590 .541  1      
+  .447 .432 .401 .381 .402 .288  1     
+  .541 .537 .534 .350 .367 .320 .555  1   
+  .380 .358 .359 .424 .446 .325 .598 .452  1'
+
+fa_cor <- getCov(fa_lower,
+                  names = c("Sentences", "Vocabulary", "Sentence_Completion", "First_Letters",
+                            "FourLetterWords", "Suffices","Letter_Series","Pedigrees", "Letter_Grouping"))
+
+fa_model <- 'verbal =~ Sentences + Vocabulary + Sentence_Completion
+             Wrd_Fluen =~ First_Letters + FourLetterWords + Suffices
+             Reasoning =~   Letter_Series + Pedigrees +  Letter_Grouping'
+
+
+fa_model_fit <- cfa(model = fa_model,
+                    sample.cov = fa_cor, 
+                    sample.nobs = 213, 
+                    std.lv = TRUE)
+
+fitMeasures(fa_model_fit, c("chisq", "df", "pvalue", "cfi", "rmsea"))
+
+lavInspect(fa_model_fit, "est")
+```
+

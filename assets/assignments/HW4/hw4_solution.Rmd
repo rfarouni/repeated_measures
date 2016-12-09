@@ -1,0 +1,402 @@
+---
+title: "HW4 Solution"
+author: "Rick Farouni"
+date: "Oct 1st, 2016"
+output: html_document
+geometry: margin=0.5in, voffset=0in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+options(digits = 3)
+```
+
+Load required libraries
+```{r , message=FALSE}
+library(lavaan)
+library(semPlot)
+```
+
+
+### EX 1 
+
+The following explanation contains material that wasn't covered at the time when the assignment was handed out, but you should pay attention to it since it provides a big picture for all the models that will be covered in the course. 
+
+Consider the **structural model** (without intercept)
+$$\begin{aligned}
+\boldsymbol \eta &=\mathbf B \boldsymbol \eta +\boldsymbol \Gamma  \boldsymbol\xi +\boldsymbol \zeta\\
+\end{aligned}
+$$
+and the **measurement model** 
+$$\begin{aligned}
+\mathbf x &=\boldsymbol \Lambda_x \boldsymbol \eta  +\boldsymbol \epsilon\\
+\mathbf y &=\boldsymbol \Lambda_y \boldsymbol \xi  +\boldsymbol \delta\\
+\end{aligned}
+$$
+where $\boldsymbol \eta$ is a vector of endogenous latent variables, $\boldsymbol\xi$ a vector of exogenous latent variables, $\boldsymbol \zeta$ is a vector error variables, $\mathbf y$ a vector of endogenous observed variables, $\mathbf x$ a vector of exogenous observed variables such that
+$$\begin{aligned}
+Cov(\boldsymbol \eta) &= \boldsymbol \Phi \\
+Cov(\boldsymbol\xi) &= \boldsymbol \Psi \\
+Cov(\boldsymbol \epsilon) &= \boldsymbol \Theta_x\\
+Cov(\boldsymbol \delta) &= \boldsymbol \Theta_y
+\end{aligned}
+$$
+Now a **path analysis model** is a structural equation model where $\mathbf x$ and $\mathbf y$ are observed without error such that 
+$$\begin{aligned}
+\boldsymbol \Lambda_x &=\mathbf I\\
+\boldsymbol \Lambda_y &= \mathbf  I \\
+\boldsymbol \Theta_x &= \boldsymbol{0} \\
+\boldsymbol \Theta_y &= \boldsymbol{0}
+\end{aligned} 
+$$
+
+We can use the *lisrelModel* function (Look [here](http://sachaepskamp.com/semPlot/examples) for examples) in the *semPlot* package to plot the path diagram for the model. We just need to feed the function the matrices with a 1 specifiying a free parameter and zero for fixed parameter. Here is the code:
+```{r }
+endogen_N <- 6 # number of endogenous observed variables
+exogen_N <- 2 # number of exogenous observed variables
+# Beta 3x3 matrix:
+Beta <- matrix(c(0, 0, 0, 0, 0, 0,
+                 1, 0, 0, 0, 0, 0,
+                 1, 1, 0, 0, 0, 0,
+                 1, 1, 1, 0, 0, 0,
+                 1, 1, 1, 0, 0, 0,
+                 0, 0, 0, 1, 1, 0), 
+                nrow = endogen_N,
+                ncol = endogen_N,
+                byrow = TRUE)
+
+# Gamma 6x2 matrix :
+Gamma <- matrix(c(1, 0,
+                  1, 1,
+                  0, 0,
+                  0, 0,
+                  0, 0,
+                  0, 0), 
+                nrow = endogen_N , 
+                ncol = exogen_N ,
+                byrow = TRUE)
+
+# Psi 6x6  matrix :
+Psi <- matrix( c(1, 0, 0, 0, 0, 0,
+                 0, 1, 0, 0, 0, 0,
+                 0, 0, 1, 0, 0, 0,
+                 0, 0, 0, 1, 0, 0,
+                 0, 0, 0, 0, 1, 0,
+                 0, 0, 0, 0, 0, 1), 
+                nrow = endogen_N,
+                ncol = endogen_N,
+                byrow = TRUE)
+
+# Phi 2x2matrix :
+Phi <- matrix( c(1, 1,
+                 1, 1), 
+                nrow = exogen_N,
+                ncol = exogen_N,
+                byrow = TRUE)
+
+# Lambda identity matrices :
+Lambda_x <- diag(1, 
+                 nrow = exogen_N, 
+                 ncol = exogen_N)
+Lambda_y <- diag(1,             
+                 nrow = endogen_N,
+                 ncol = endogen_N)
+
+```
+
+We can print out the matrices first
+```{r }
+Beta
+Gamma
+Psi
+Phi
+Lambda_x
+Lambda_y
+```
+
+Combine the model and plot
+```{r }
+
+# Combine model:
+mod <- lisrelModel(LY = Lambda_y,
+                   PS = Psi, 
+                   BE = Beta, 
+                   manNamesEndo = c("AcaPerf", "SigOther", "EdAspire", "OccAspir", "EdAttain", "OccAtain"),
+                   LX = Lambda_x,
+                   PH = Phi, 
+                   GA = Gamma,
+                   manNamesExo = c("Ability", "SES"))
+# Plot path diagram:
+semPaths(mod, 
+         as.expression = c("nodes", "edges"), 
+         layout = "circle",
+         sizeMan = 5,  # adjust size of boxes
+         sizeInt = 1, 
+         sizeLat = 4,
+         curve = TRUE)
+```
+
+
+### EX 2 
+
+
+First assign the summarized data to a character vector and convert it to a full symmetric covariance/correlation matrix with names
+
+```{r }
+
+Sample_A <- 
+' 1 
+ .225    1 
+ .534  .181    1 
+ .456  .344  .505    1 
+ .404  .377  .442  .632    1 
+ .429  .367  .473  .594  .767    1 
+ .467  .382  .548  .640  .681  .632    1 
+ .373  .308  .372  .460  .450  .468  .581    1 '
+
+N1 <- 935
+Sample_A_cor <- getCov(Sample_A,
+                  names = c("Ability", "SES", "AcaPerf", "SigOther", "EdAspire", "OccAspir", "EdAttain", "OccAtain"))
+
+```
+
+Specify model
+```{r }
+  model1 <- '
+     AcaPerf ~ Ability
+     SigOther ~ SES + Ability + AcaPerf
+     EdAspire ~ AcaPerf + SigOther
+     OccAspir ~ AcaPerf + SigOther +  EdAspire
+     EdAttain ~ AcaPerf + SigOther +  EdAspire
+     OccAtain ~ OccAspir + EdAttain '
+```
+
+
+Fit the model 
+```{r }
+model1_fit <- sem(model1,
+           sample.cov = Sample_A_cor,
+           sample.nobs = N1)
+summary(model1_fit)
+```
+
+
+```{r }
+(modelEst1 <- lavInspect(model1_fit, "est"))
+```
+
+Note that in lavaan the psi matrix corresponds to the following compound matrix in the notes 
+
+$$
+\begin{bmatrix}
+\boldsymbol \Psi  & \mathbf 0\\ 
+\mathbf 0 & \boldsymbol \Phi
+\end{bmatrix}
+$$
+
+and the beta matrix to 
+
+$$
+\begin{bmatrix}
+\mathbf B  & \boldsymbol \Gamma\\ 
+\mathbf 0 & \mathbf 0
+\end{bmatrix}
+$$
+
+Please extract them
+```{r }
+(Psi   <- modelEst1$psi[1:6, 1:6])
+(Phi   <- modelEst1$psi[7:8, 7:8])
+(Beta  <- modelEst1$beta[1:6, 1:6])
+(Gamma <- modelEst1$beta[1:6, 7:8])
+```
+
+
+Print the residuals using the *resid* function and set the type option either to "standardized","normalized", "cor" or "raw". These are the standardized, normalized, correlation transformed, or the raw unstandardized difference between the implied moments and the observed correlation matrix. Inverstigate which one is appropriate and report it (hint: the summary data is a correlation matrix)
+
+```{r }
+resid(model1_fit, type = "raw")
+```
+
+Print the three fit measures (T_ml , df , RMSEA) using the *fitMeasures*  function with the correct argument in the *fit.measures* option. Note that the ML test statistic T_ml (test of exact fit) is obtained using the likelihood ratio test between the saturated model (the model with degrees of freedom df = 0) and the hypothesized model which has a positive df. Under the assumptions of proper model specification, multivariate normality, and sufficiently large samlple size, T_ml follows a chi-square distribution. The RMSEA, on the otherhand, is a measure of lack of fit with an adjustment for nodel parsimony.
+
+```{r }
+fitMeasures(model1_fit, fit.measures = c("chisq", "df", "rmsea"))
+```
+
+### EX 3 
+
+Use the the *modificationIndices* function and pay attention to the expected parameter change (epc) and the modification index (mi) values
+
+
+```{r }
+modificationIndices(model1_fit, 
+                    standardized = FALSE,
+                    sort. = TRUE)
+
+```
+
+Model improvement. Modify the model
+
+```{r }
+  model2 <- '
+     AcaPerf ~ Ability
+     SigOther ~ SES + Ability + AcaPerf 
+     EdAspire ~ AcaPerf + SigOther
+     OccAspir ~ AcaPerf + SigOther +  EdAspire
+     EdAttain ~ AcaPerf + SigOther +  EdAspire
+     OccAtain ~ OccAspir + EdAttain 
+     SigOther ~~ EdAspire'
+```
+
+
+and the corresponding model matrices
+
+```{r }
+endogen_N <- 6 # number of endogenous observed variables
+exogen_N <- 2 # number of exogenous observed variables
+# Beta 3x3 matrix:
+Beta <- matrix(c(0, 0, 0, 0, 0, 0,
+                 1, 0, 0, 0, 0, 0,
+                 1, 1, 0, 0, 0, 0,
+                 1, 1, 1, 0, 0, 0,
+                 1, 1, 1, 0, 0, 0,
+                 0, 0, 0, 1, 1, 0), 
+                nrow = endogen_N,
+                ncol = endogen_N,
+                byrow = TRUE)
+
+# Gamma 6x2 matrix :
+Gamma <- matrix(c(1, 0,
+                  1, 1,
+                  0, 0,
+                  0, 0,
+                  0, 0,
+                  0, 0), 
+                nrow = endogen_N , 
+                ncol = exogen_N ,
+                byrow = TRUE)
+
+# Psi 6x6 diagonal matrix :
+Psi <- matrix( c(1, 0, 0, 0, 0, 0,
+                 0, 1, 1, 0, 0, 0,
+                 0, 1, 1, 0, 0, 0,
+                 0, 0, 0, 1, 0, 0,
+                 0, 0, 0, 0, 1, 0,
+                 0, 0, 0, 0, 0, 1), 
+                nrow = endogen_N,
+                ncol = endogen_N,
+                byrow = TRUE)
+
+# Phi 2x2 diagonal matrix :
+Phi <- matrix( c(1, 0,
+                 0, 1), 
+                nrow = exogen_N,
+                ncol = exogen_N,
+                byrow = TRUE)
+
+# Lambda identity matrices :
+Lambda_x <- diag(1, 
+                 nrow = exogen_N, 
+                 ncol = exogen_N)
+Lambda_y <- diag(1,             
+                 nrow = endogen_N,
+                 ncol = endogen_N)
+
+```
+
+We can print out the matrices first
+```{r }
+Beta
+Gamma
+Psi
+Phi
+Lambda_x
+Lambda_y
+```
+
+Combine the model and plot
+```{r }
+
+# Combine model:
+mod2 <- lisrelModel(LY = Lambda_y,
+                   PS = Psi, 
+                   BE = Beta, 
+                   manNamesEndo = c("AcaPerf", "SigOther", "EdAspire", "OccAspir", "EdAttain", "OccAtain"),
+                   LX = Lambda_x,
+                   PH = Phi, 
+                   GA = Gamma,
+                   manNamesExo = c("Ability", "SES"))
+# Plot path diagram:
+semPaths(mod2, 
+         as.expression = c("nodes", "edges"), 
+         layout = "circle",
+         sizeMan = 5,  # adjust size of boxes
+         sizeInt = 1, 
+         sizeLat = 4,
+         curve = TRUE)
+```
+
+### EX 4 
+
+Read data for Sample B
+```{r }
+Sample_B <- '
+  1 
+ .292    1 
+ .501  .172    1 
+ .407  .259  .426    1 
+ .403  .332  .419  .552    1 
+ .435  .297  .457  .510  .731    1 
+ .512  .381  .490  .552  .649  .580    1 
+ .344  .295  .330  .383  .430  .445  .587    1'
+
+N2 <- 686
+Sample_B_cor <- getCov(Sample_B,
+                  names = c("Ability", "SES", "AcaPerf", "SigOther", "EdAspire", "OccAspir", "EdAttain", "OccAtain"))
+
+```
+
+
+Fit the model with Sample A
+```{r }
+model2A_fit <- sem(model2,
+           sample.cov = Sample_A_cor,
+           sample.nobs = N1)
+summary(model2A_fit)
+```
+
+Fit the model with Sample B
+```{r }
+model2B_fit <- sem(model2,
+           sample.cov = Sample_B_cor,
+           sample.nobs = N2)
+summary(model2B_fit)
+
+```
+
+print the coefficients
+```{r }
+(coef_2A <- coef(model2A_fit))
+(coef_2B <- coef(model2B_fit))
+cbind(coef_2A, coef_2B)
+```
+Print the three fit measures 
+
+```{r }
+fit_idx_2A <- fitMeasures(model2A_fit, fit.measures = c("chisq", "df", "rmsea"))
+fit_idx_2B <- fitMeasures(model2B_fit, fit.measures = c("chisq", "df", "rmsea"))
+cbind(fit_idx_2A,fit_idx_2B)
+```
+
+print the residuals
+
+```{r }
+resid_2A <- resid(model2A_fit, type = "raw") 
+(resid_2A$cov)
+resid_2B <- resid(model2B_fit, type = "raw") 
+(resid_2B$cov)
+resid_2A$cov - resid_2B$cov
+```
+
+

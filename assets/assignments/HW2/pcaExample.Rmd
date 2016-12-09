@@ -16,6 +16,7 @@ First, lets read the data, extract the variables we need, then center and option
 ```{r }
 strength_df <- read.table("~/Documents/repos/PSYCH7821/assets/assignments/HW2/strength.csv", header = TRUE)
 
+
 X <- as.matrix(scale(strength_df[ , 6:11],
                        center = TRUE, 
                        scale = TRUE)

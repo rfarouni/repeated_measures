@@ -1,0 +1,50 @@
+
+
+
+x1 Mental Ability 
+x2 Socioeconomic Status
+y1 Academic Performance
+y2 Significant Others' Influence 
+y3 Educational Aspiration 
+y4 Occupational Aspiration 
+y5 Educational Attainment 
+y6 Occupational Attainment
+
+
+Variable names
+Ability SES AcaPerf SigOther EdAspire OccAspir EdAttain OccAtain
+
+
+
+ 
+Predictors of Educational and Occupational Attainment 
+ 
+ 
+Sample A, N=935
+   1 
+ .225    1 
+ .534  .181    1 
+ .456  .344  .505    1 
+ .404  .377  .442  .632    1 
+ .429  .367  .473  .594  .767    1 
+ .467  .382  .548  .640  .681  .632    1 
+ .373  .308  .372  .460  .450  .468  .581    1 
+ 
+ 
+Sample B, N=686
+   1 
+ .292    1 
+ .501  .172    1 
+ .407  .259  .426    1 
+ .403  .332  .419  .552    1 
+ .435  .297  .457  .510  .731    1 
+ .512  .381  .490  .552  .649  .580    1 
+ .344  .295  .330  .383  .430  .445  .587    1 
+ 
+
+
+
+
+
+
+ 

@@ -33,12 +33,12 @@ table(Q1_df$motiv)
 table(Q1_df$civics)
 ```
 
-Now we can see that *motiv* is a an ordinal variable, more specifically it is a polytomous variable with four levels. *civics* on the other hand seems to have a mixture distribution. The data has obvioulsly been previoulsy preprocessed in a way that might affect the analysis. 
+Now we can see that *motiv* is a an ordinal variable. More specifically, it is a polytomous variable with four levels. The variable *civics* on the other hand seems to have a mixture distribution. This leads me to think that the data has been previoulsy preprocessed in a way that might affect the analysis. 
 
 
-> NOTE 1: The optimal coefficient $\beta$ the regression fit gives us back depends on the distributions of the predictor variables!
+> NOTE 1: The optimal coefficient $\beta$ which the regression fit computes depends on the distributions of the predictor variables!
 
-Since we have standardized the data, let's compute the correlation matrix. Note that I am leaving out *civics* and *motiv* since correlation is a measure of linear assoication and these two variables are not really continous. 
+Since we have standardized the data, let's compute the correlation matrix. Note that I am leaving out *civics* and *motiv* since Pearson's correlation is a measure of linear association which is appropriate for continuous variables and these two variables are not really continuous. 
 
 ```{r }
 
@@ -46,13 +46,12 @@ cor(Q1_df[ , 6:11])
 
 ```
 
-If we plan to fit a regression model, when need to worry about collinearity. The 4 test ability variables seem correlated among each other, so we need to deal with collinearity. One solution is to obtain a second dataset with uncorrelated predictor variables.  A second approach is regularization, but that is more approporiate for  high-dimensional datasets (n<<p). A third approach is to identify the correlated variables and just consider a single one to include in the model. Since this approach is not so straightforward, principal components analysis can be used instead to reduce the  correlated variables into one or two independent variables.
+If we plan to fit a regression model, when need to worry about collinearity. The four test ability variables seem correlated among each other, so we need to deal with collinearity. One solution is to obtain a second dataset with uncorrelated predictor variables.  A second approach involves regularization and shrinkage, methods which are commonly used for high-dimensional datasets (n<<p). A third approach is to identify the correlated variables and just consider a single one to include in the model. Since this approach is not so straightforward, principal components analysis can be used instead to reduce the correlated variables into one or two independent variables.
 
 
 ## Step 3: Plot the data
 
-
-This the most important step in data analysis. If you do not plot your data first, you are just stumbling in the dark. The data we have is multidimensional, so a pairs plot is a good way to try to see any patterns in the data. You can use the *pairs* function to plot the data, but I am writing my own function so I can use web graphics instead. 
+This the most important step in data analysis. If you do not plot your data first, you might just as well be stumbling in the dark. The data we have is multidimensional, so a pairs plot is a good way to try to see any patterns in the data. You can use the *pairs* function to plot the data, but I am writing my own function so I can use web graphics instead. 
 
 ```{r }
 library(rbokeh)
@@ -63,8 +62,8 @@ nms <- expand.grid(names(df)[colms],
                    stringsAsFactors = FALSE)
 splom_list <- vector("list", length(nms))
 for (ii in seq_len(nrow(nms))) {
-  splom_list[[ii]] <- figure(width = 120, 
-                             height = 120, 
+  splom_list[[ii]] <- figure(width = 110, 
+                             height = 110, 
                              tools = c("pan", "box_zoom", "reset"), 
                              xlab = nms$Var1[ii],
                              ylab = nms$Var2[ii]) %>%
@@ -129,10 +128,11 @@ summary(pca_fit)
 
 ```
 
-Now pca_fit is a list with three objects (rotation, sdev, X). You can access the objects with the $ operator, so for example:
 
-## Question 1A
+### Question 1A
 
+
+Now pca_fit is a list with three objects (rotation, sdev, X). You can access the objects with the $ operator, so for example,
 Q is the loading matrix (eigenvectors)
 
 ```{r}
@@ -193,13 +193,14 @@ par(mfrow = c(2,2))
 plot(fit1)
 ```
 
-Models assumptions seem to hold for the most part. More about how to interpret these plots [here](http://data.library.virginia.edu/diagnostic-plots/). 
+Models assumptions seem to hold for the most part. More about how to interpret these plots <a href="http://data.library.virginia.edu/diagnostic-plots/" target="_blank"> here </a>. 
 
 ## Step 6: Model Selection
 
 To find which of these 6 variables are the most important and statistically significant predictors, we can perform stepwise regression using the AIC. 
 
-> NOTE 2: The step function in R takes proper account of the number of parameters fit ,dropping or adding variables (sometimes in a group) that minimizes the AIC score. If the package you are using does selection on F-statistics instead, by adding “significant” terms  and dropping “non-significant” terms, then multiple comparison issues are not properly dealt with by your package (Friedman, J., Hastie, T., & Tibshirani, R., 2001) and I would recommond switching to another package.  
+> NOTE 2: The step function in R takes proper account of the number of parameters fit by dropping or adding variables (sometimes in a group) that minimizes the AIC score. If the package you are using does selection on F-statistics instead, by adding “significant” terms  and dropping “non-significant” terms, then multiple comparison issues are not properly dealt with by your package (Friedman, J., Hastie, T., & Tibshirani, R., 2001) and I would recommend switching to another package. A better option would be to take a totally different approach and use ridge regression. 
+
 
 ```{r}
 stepFit <- step(fit1)
@@ -248,7 +249,9 @@ fit2 <- lm(gpa ~ spatial2d + spatial3d + mech_res + arith + computat,
 summary(fit2)
 ```
 
-> NOTE 3: We see that only *computat* shows statistical significance, but that is expected given that the variables are correlated. Even if we have a situation where each of two predictors perfectly predicts the reponse, youwill see that only one of the two will have a highly significant p-value when two are highly correlated. We need to deal with multicollinearity first.
+> NOTE 3: We see that only *computat* shows statistical significance, but that is expected given that the variables are correlated. Even if we have a situation where each of two highly correlated predictor variables perfectly predicts the reponse, you will see that only one of the two variables will have a highly significant p-value while the other won't. At any rate, if the goal leans more towards prediction accuracy, not model interpertability, you should not be paying much attention to p-values anyway.
+
+OK, now we need to deal with multicollinearity first. PCA is one option.
 
 ### Question 2b (Dimensionality Reduction)
 
@@ -301,7 +304,7 @@ par(mfrow = c(2, 2))
 plot(fit3)
 ```
 
-Nothing alarming! we move on the model selection
+Nothing alarming! We move on to model selection
 
 ```{r}
 stepFit3 <- step(fit3)
@@ -317,7 +320,7 @@ summary(stepFit3)
 We see that the fifth principle component was included in the model. What to do? For a more interpertable model, just keep the first two.
 
 
-> NOTE 4: Note that I haven't mentioned R-squared  here at all. The reason is people have begining to realize that R-squared is a useless criterion for model fit.
+> NOTE 4: Note that I haven't mentioned R-squared  here at all. The reason is that people are beginning to realize that R-squared is a useless criterion for model fit.
 
 The reason for that are as follows:
 
@@ -326,7 +329,7 @@ The reason for that are as follows:
 3. R-squared does not allow you to compare models using transformed responses.
 4. R-squared does not measure how one variable explains another.
 
-These reasons are explained really well [here](http://data.library.virginia.edu/is-r-squared-useless/)
+These reasons are explained really well <a href="http://data.library.virginia.edu/is-r-squared-useless/" target="_blank"> here </a>.
 
 
 ==========================================
