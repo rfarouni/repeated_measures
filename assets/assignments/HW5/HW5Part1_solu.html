@@ -390,15 +390,25 @@ H_1:\boldsymbol \Sigma= \begin{bmatrix}
  \vdots &amp;\vdots &amp;  \ddots  &amp; \vdots \\
 \sigma_{10,1} &amp; \ldots  &amp; \sigma_{10,9} &amp;\sigma_{10,10}
 \end{bmatrix}
-\]</span> That is, the covariance matrix is unconstrained. For incremental fit indicies, the null hypothesis is tested against the null/independence model that the observed variables are uncorrelated. In this case, we have</p>
+\]</span> That is, the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. <strong>We fail to reject the null hypothesis</strong>. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis.</p>
+<p>For incremental fit indicies, you have a set of nested sequence of hypothesis. One one end of the extreme, you have the the null/independence model that states the observed variables are uncorrelated. In this case, we say that for estimated covariance matrix $ $ and sample covariance data <span class="math inline">\(S\)</span></p>
 <p><span class="math display">\[
-H_1:\boldsymbol \Sigma= \begin{bmatrix}
-  \sigma_{11} &amp; 0  &amp; \ldots &amp; 0  \\
-   0 &amp; \sigma_{22}  &amp; \ldots &amp; 0  \\
+ \hat{\Sigma}= \begin{bmatrix}
+  s_{11} &amp; 0  &amp; \ldots &amp; 0  \\
+   0 &amp; s_{22}  &amp; \ldots &amp; 0  \\
  \vdots &amp;\vdots &amp;  \ddots  &amp; \vdots \\
-0 &amp; \ldots  &amp; 0 &amp;\sigma_{10,10}
+0 &amp; \ldots  &amp; 0 &amp;s_{10,10}
 \end{bmatrix}
-\]</span> The fit indices show an almost perfect fit to the data. <strong>We fail to reject the null hypothesis</strong>. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis.</p>
+\]</span></p>
+<p>at the other end of the extreme, we have the saturated model</p>
+<p><span class="math display">\[
+\hat{\Sigma}= S=\begin{bmatrix}
+  s_{11} &amp; s_{12} &amp; \ldots &amp; s_{1,10}  \\
+   s_{21} &amp; s_{22}  &amp; \ldots &amp; s_{2,10}  \\
+ \vdots &amp;\vdots &amp;  \ddots  &amp; \vdots \\
+s_{10,1} &amp; \ldots  &amp; s_{10,9} &amp;s_{10,10}
+\end{bmatrix}
+\]</span> A incremental fit statistic value close to 0 implies that the proposed model is not an improvment over the independence model. A value close to 1 implies that the proposed model is a perfect fit for the data <span class="math inline">\(S\)</span></p>
 </div>
 <div id="question-1f" class="section level3">
 <h3>Question 1f</h3>
