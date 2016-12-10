@@ -140,7 +140,7 @@ What is the null hypothesis? Given the values of the model fit indicies, do you 
 
 ### Solution 1e
 
-The likelihood ratio statistic of our model assumes that null hypothesis is 
+The likelihood ratio statistic of our model assumes that the null hypothesis is 
 $$
 \begin{aligned}
 H_0:\boldsymbol \Sigma= \boldsymbol\Lambda\boldsymbol \Lambda^{T} +  \boldsymbol \Theta &=\begin{bmatrix} 
@@ -173,10 +173,12 @@ H_1:\boldsymbol \Sigma= \begin{bmatrix}
 \sigma_{10,1} & \ldots  & \sigma_{10,9} &\sigma_{10,10}
 \end{bmatrix}
 $$
-namely that the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. Our conclusion: **We fail to reject the null hypothesis**. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis. 
+namely that the covariance matrix is unconstrained. 
+
+The fit indices show an almost perfect fit to the data. Our conclusion: **We fail to reject the null hypothesis**. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis. 
 
 
-For incremental fit indicies, you have a set of nested sequence of hypotheses. One one end of the extreme, you have the the null/independence model that states the observed variables are uncorrelated. In this case, we say that for estimated covariance matrix  $\hat{\Sigma}$ and sample covariance data $S$
+For incremental fit indices, you have a set of nested sequence of hypotheses. One one end of the extreme, you have the the **null/independence model** that states the observed variables are uncorrelated. In this case, we say that for estimated covariance matrix  $\hat{\Sigma}$ and sample covariance data $S$
 
 $$
  \hat{\Sigma}= \begin{bmatrix}
@@ -187,7 +189,7 @@ $$
 \end{bmatrix}
 $$
 
-at the other end of the extreme, we have the saturated model
+at the other end of the extreme, we have the **saturated model**
 
 $$
 \hat{\Sigma}= S=\begin{bmatrix}
@@ -208,7 +210,7 @@ Model fit provides little information about how the data was actually generated.
 
 ### Solution 1f
 
-The perfect fit we obtained from this widely incorrect model should give you pause. Consider any single item on a self-report measure, whether it is in a depression test battery or in a survey questionnaire. How many unobserved causes (e.g. mental processes) do you think can give rise to the item response? In the physical science, we attempt to uncover the causal mechanism that gives rise to the data by measuring additional observable variables and incorporated them into  a model that explains the phenomenon of interest. In the social and psychological sciences, these causes are unobservable and the only way to really measure them is to do so indirectly via brain activity or other physiological proxies. Thomson's model assumes that you have more latent causes than you have variables. It is a more plausible sampling model of how the world is, but it is not a model you can fit your data to. You simple cannot meaure 550 nonobservable variables using 10 observable variables. Pearson's model is a model of how you think the world is. It can be useful since it can provide evidence for a pattern of correlations in your data. Nonetheless, interpreting  correlations in a finite sample as representing a hypothetical construct that can objectively be measured is a fallacy known in philosophy, psychometrics, and statistics as the **reification fallacy**. Also note that correlations are measures of linear association and are only applicable when the linearity assumption holds. 
+The perfect fit we obtained from this widely incorrect model should give you pause. Consider any single item on a self-report measure, whether it is in a depression test battery or in a survey questionnaire. How many unobserved causes (e.g. mental processes) do you think can give rise to the actual response by a subject? In the physical science, we attempt to uncover the causal mechanism that gives rise to the data by measuring additional observable variables and incorporating them into a model that explains the phenomenon of interest. In the social and psychological sciences, these causes are unobservable and arguably the only way to really measure them is to do so indirectly via brain activity or other physiological proxies. Thomson's model assumes that you have more latent causes than you have variables. It is a more plausible sampling model of how the world is, but it is not a model you can fit your data to. You simply cannot meaure 550 nonobservable variables using 10 observable variables. Pearson's model is a model of how you think the world is. It can be useful since it can provide evidence for a pattern of correlations in your data. Nonetheless, interpreting  correlations in a finite sample as representing a hypothetical construct that can objectively be measured is a fallacy known in philosophy, psychometrics, and statistics as the **reification fallacy**. Also note that correlations are measures of linear associations and are only applicable when the linearity assumption holds. 
 
 
 ### Question 1g
