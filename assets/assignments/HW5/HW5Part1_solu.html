@@ -344,7 +344,7 @@ test10 -0.06  0.19  0.06  0.02 -0.07  0.01 -0.03  0.02 -0.03  0.00 </code></pre>
 </div>
 <div id="solution-1e" class="section level3">
 <h3>Solution 1e</h3>
-<p>The likelihood ratio statistic of our model assumes that null hypothesis is that covariance matrix predicted by the model has the following decomposition: <span class="math display">\[
+<p>The likelihood ratio statistic of our model assumes that null hypothesis is <span class="math display">\[
 \begin{aligned}
 H_0:\boldsymbol \Sigma= \boldsymbol\Lambda\boldsymbol \Lambda^{T} +  \boldsymbol \Theta &amp;=\begin{bmatrix} 
 \lambda_1\\
@@ -366,14 +366,14 @@ H_0:\boldsymbol \Sigma= \boldsymbol\Lambda\boldsymbol \Lambda^{T} +  \boldsymbol
 \lambda_{10}\lambda_{1} &amp; \ldots  &amp; \lambda_{10}\lambda_{9} &amp; \lambda^2_{10}+ \sigma^2_{10}
 \end{bmatrix} 
 \end{aligned} 
-\]</span> and that the alternative hypothesis is <span class="math display">\[
+\]</span> namely that the covariance matrix predicted by the model has the matrix decomposition above. The alternative hypothesis is <span class="math display">\[
 H_1:\boldsymbol \Sigma= \begin{bmatrix}
   \sigma_{11} &amp; \sigma_{12} &amp; \ldots &amp; \sigma_{1,10}  \\
    \sigma_{21} &amp; \sigma_{22}  &amp; \ldots &amp; \sigma_{2,10}  \\
  \vdots &amp;\vdots &amp;  \ddots  &amp; \vdots \\
 \sigma_{10,1} &amp; \ldots  &amp; \sigma_{10,9} &amp;\sigma_{10,10}
 \end{bmatrix}
-\]</span> That is, the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. <strong>We fail to reject the null hypothesis</strong>. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis.</p>
+\]</span> namely that the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. Our conclusion: <strong>We fail to reject the null hypothesis</strong>. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis.</p>
 <p>For incremental fit indicies, you have a set of nested sequence of hypotheses. One one end of the extreme, you have the the null/independence model that states the observed variables are uncorrelated. In this case, we say that for estimated covariance matrix <span class="math inline">\(\hat{\Sigma}\)</span> and sample covariance data <span class="math inline">\(S\)</span></p>
 <p><span class="math display">\[
  \hat{\Sigma}= \begin{bmatrix}

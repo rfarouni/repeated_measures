@@ -140,7 +140,7 @@ What is the null hypothesis? Given the values of the model fit indicies, do you 
 
 ### Solution 1e
 
-The likelihood ratio statistic of our model assumes that null hypothesis is that covariance matrix predicted by the model has the following decomposition:
+The likelihood ratio statistic of our model assumes that null hypothesis is 
 $$
 \begin{aligned}
 H_0:\boldsymbol \Sigma= \boldsymbol\Lambda\boldsymbol \Lambda^{T} +  \boldsymbol \Theta &=\begin{bmatrix} 
@@ -164,7 +164,7 @@ H_0:\boldsymbol \Sigma= \boldsymbol\Lambda\boldsymbol \Lambda^{T} +  \boldsymbol
 \end{bmatrix} 
 \end{aligned} 
 $$
-and that the alternative hypothesis is 
+namely that the covariance matrix predicted by the model has the matrix decomposition above. The alternative hypothesis is 
 $$
 H_1:\boldsymbol \Sigma= \begin{bmatrix}
   \sigma_{11} & \sigma_{12} & \ldots & \sigma_{1,10}  \\
@@ -173,7 +173,7 @@ H_1:\boldsymbol \Sigma= \begin{bmatrix}
 \sigma_{10,1} & \ldots  & \sigma_{10,9} &\sigma_{10,10}
 \end{bmatrix}
 $$
-That is, the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. **We fail to reject the null hypothesis**. There is evidence that the  sample covariance matrix of our data can have the decomposition implied by the null hypothesis. 
+namely that the covariance matrix is unconstrained. The fit indices show an almost perfect fit to the data. Our conclusion: **We fail to reject the null hypothesis**. There is evidence that the sample covariance matrix of our data can have the decomposition implied by the null hypothesis. 
 
 
 For incremental fit indicies, you have a set of nested sequence of hypotheses. One one end of the extreme, you have the the null/independence model that states the observed variables are uncorrelated. In this case, we say that for estimated covariance matrix  $\hat{\Sigma}$ and sample covariance data $S$
