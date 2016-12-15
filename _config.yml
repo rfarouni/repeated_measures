@@ -23,7 +23,6 @@ color:
 # Footer settings
 footer:
   copyright: Rick Farouni
-  location: Course Developed at
   social: Links
   credits: Credits
 
@@ -31,16 +30,14 @@ footer:
 social:
   - title: slack
     url: https://psych7821.slack.com
-  - title: canvas
-    url: https://osu.instructure.com/courses/6811
   - title: github
     url: https://github.com/rfarouni/PSYCH7821
 
 # Postal address (add as many lines as necessary)
-address:
-  - line: The Department of Psychology
-  - line: The Ohio State University
-  - line: Columbus, Ohio.
+#address:
+#  - line: The Department of Psychology
+#  - line: The Ohio State University
+#  - line: Columbus, Ohio.
 
 # Credits content
 credits: The website uses the Freelancer open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.
