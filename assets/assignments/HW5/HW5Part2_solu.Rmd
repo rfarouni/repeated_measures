@@ -1,0 +1,89 @@
+---
+title: "HW5 Part2 Exploratory Data Plots"
+author: "Rick Farouni"
+date: "December 14, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(GGally)
+library(corrplot)
+```
+
+let's load the data, transform variables that should be treated as nominal into factors, and leave the variables that should be treated as ordinal as they are.  
+
+```{r}
+bfg <- read.table( "bfg_numeric.csv", sep = "\t", header = TRUE)
+bfg$Vote <- as.factor(bfg$Vote)
+bfg$Gender <- as.factor(bfg$Gender)
+bfg$Race <- as.factor(bfg$Race)
+bfg$State <- as.factor(bfg$State)
+```
+
+Reverse code items and re-order the columns so that the items belonging to the same big five dimension are grouped close to each other
+```{r}
+ind <- c(2, 6, 21, 31, 12, 27, 37, 8, 18, 23, 43, 9, 24, 34, 35, 41) 
+keys <- rep(1, 44)
+keys[ind] <- -1
+bfg[,1:44] <- as.data.frame(psych::reverse.code(keys, bfg[ ,1:44] , mini = 1, maxi = 5))
+ord <- c(1, 6, 11, 16, 21, 26, 31, 36,
+         2, 7, 12, 17, 22, 27, 32, 37, 42,
+         3, 8, 13, 18, 23, 28, 33, 38, 43,
+         4, 9, 14, 19, 24, 29, 34, 39,
+         5, 10, 15, 20, 25, 30, 35, 40, 41, 44) 
+bfg <- bfg[ , c(ord, 45:57)]
+```
+
+Plot the a subset of data assuming that the ordinal variables are continous 
+```{r, fig.height=14,fig.width=10}
+Extraversion <- 1:8
+#Agreeableness <- 9:17
+#Conscientiousness <- 18:27
+#Neuroticism <- 28:34
+#Openness <- 35:44
+ggpairs(bfg, 
+        columns = Extraversion,
+        lower = list(
+          continuous = 'smooth'
+        ),
+        upper = list(
+          continuous = 'density'
+        )
+)
+
+```
+Let's examine some of the remaining variables. The diagonal shows their marginal distribution density. Are they normal? The lower diagonal is a scatter plot of any two pairs of variables with a regression line overlayed on the figure whereas the upper diagonal is a two dimensional bivariate density plot. 
+
+```{r, fig.height=14,fig.width=10,warning=FALSE, message=FALSE}
+ggpairs(bfg, 
+        columns = c(45:48, 52:56),
+        lower = list(
+          continuous = 'smooth'
+        ),
+        upper = list(
+          continuous = 'density'
+        )
+)
+
+```
+
+There are some interesting patterns! Now let's move on to the items.
+
+Since our items are ordinal, we compute the polychoric correlation among the 44 items and plot the correlation matrix heatmap clustered by distance
+
+```{r,fig.height=12,fig.width=12}
+cor_mat <- psych::polychoric(bfg[ , 1:44])
+corrplot(cor_mat$rho,
+         order = "hclust",
+         tl.col = 'black',
+         tl.cex=.5) 
+
+```
+
+Notice the top block and how it is negatively correlated with the bigger block, which has 4-5 smaller blocks on the diagonal.
+
+

@@ -52,8 +52,43 @@ Neuroticism: 4, 9R, 14, 19, 24R, 29, 34R, 39
 Openness: 5, 10, 15, 20, 25, 30, 35R, 40, 41R, 44
 
 
-xx <- read.table( "bfg.csv", sep="\t", header = TRUE)
+bfg_numeric <- read.table( "/home/rick/Downloads/bfg_numeric.csv", sep="\t", header = TRUE)
+datafile<-"/home/rick/Downloads/bfg_numeric.sav"
+codefile<-"/home/rick/Downloads/bfg_numeric.cod"
+write.foreign(bfg_numeric,datafile,codefile,package="SPSS")
+file.show(codefile)
 
+
+fa4_model <- 'fa4_1=~ bfi_1 + bfi_2 + bfi_3 + bfi_4 + bfi_5 + bfi_6 + bfi_7 + bfi_8 + bfi_9 + bfi_10 + bfi_11 
++ bfi_12 + bfi_13 + bfi_14 + bfi_15 + bfi_16 + bfi_17 + bfi_18 + bfi_19 + bfi_20 + bfi_21
++ bfi_22 + bfi_23 + bfi_24 + bfi_25 + bfi_26 + bfi_27 + bfi_28 + bfi_29 + bfi_30 + bfi_31 
++ bfi_32 + bfi_33 + bfi_34 + bfi_35 + bfi_36 + bfi_37 + bfi_38 + bfi_39 + bfi_40 + bfi_41 
++ bfi_42 + bfi_43 + bfi_44 
+fa4_2=~ bfi_1 + 0*bfi_2 + bfi_3 + bfi_4 + bfi_5 + bfi_6 + bfi_7 + bfi_8 + bfi_9 + bfi_10 + bfi_11 
++ bfi_12 + bfi_13 + bfi_14 + bfi_15 + bfi_16 + bfi_17 + bfi_18 + bfi_19 + bfi_20 + bfi_21
++ bfi_22 + bfi_23 + bfi_24 + bfi_25 + bfi_26 + bfi_27 + bfi_28 + bfi_29 + bfi_30 + bfi_31 
++ bfi_32 + bfi_33 + bfi_34 + bfi_35 + bfi_36 + bfi_37 + bfi_38 + bfi_39 + bfi_40 + bfi_41 
++ bfi_42 + bfi_43 + bfi_44 
+fa4_3=~ bfi_1 + bfi_2 + bfi_3 + bfi_4 + bfi_5 + 0*bfi_6 + bfi_7 + bfi_8 + bfi_9 + 0*bfi_10 + bfi_11 
++ bfi_12 + bfi_13 + bfi_14 + bfi_15 + bfi_16 + bfi_17 + bfi_18 + bfi_19 + bfi_20 + bfi_21
++ bfi_22 + bfi_23 + bfi_24 + bfi_25 + bfi_26 + bfi_27 + bfi_28 + bfi_29 + bfi_30 + bfi_31 
++ bfi_32 + bfi_33 + bfi_34 + bfi_35 + bfi_36 + bfi_37 + bfi_38 + bfi_39 + bfi_40 + bfi_41 
++ bfi_42 + bfi_43 + bfi_44 
+fa4_4=~ bfi_1 + bfi_2 + bfi_3 + bfi_4 + bfi_5 + bfi_6 + bfi_7 + bfi_8 + bfi_9 + bfi_10 + bfi_11 
++ bfi_12 + 0*bfi_13 + 0*bfi_14 + 0*bfi_15 + bfi_16 + bfi_17 + bfi_18 + bfi_19 + bfi_20 + bfi_21
++ bfi_22 + bfi_23 + bfi_24 + bfi_25 + bfi_26 + bfi_27 + bfi_28 + bfi_29 + bfi_30 + bfi_31 
++ bfi_32 + bfi_33 + bfi_34 + bfi_35 + bfi_36 + bfi_37 + bfi_38 + bfi_39 + bfi_40 + bfi_41 
++ bfi_42 + bfi_43 + bfi_44' 
+
+bfg_numeric_r <- as.data.frame(psych::reverse.code(keys, bfg_numeric , mini=1, maxi=5))
+colnames(bfg_numeric_r) <- colnames(bfg_numeric)
+fa4_model_fit <-cfa(fa4_model, data = bfg_numeric_r, std.lv = TRUE)
+lavInspect(fa4_model_fit)
+summary (fa4_model_fit)
+fitmeasures(fa4_model_fit, "rmsea")
+saveRDS(bfg_numeric,"bfg_numeric.rds")
+
+bfg <- readRDS("bfg_numeric.rds")
 xx <-ddf_tr6$bfi_1 
 as.numeric(xx )
 str(xx)

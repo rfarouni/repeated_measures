@@ -28,4 +28,5 @@ fitMeasures(sem_model_fit, c("chisq", "df", "pvalue", "cfi", "rmsea"))
 lavInspect(sem_model_fit, "est")
 
 lavInspect(sem_model_fit, "std")
+inspect(sem_model_fit, what = "start")
 
