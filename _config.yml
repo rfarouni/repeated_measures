@@ -23,15 +23,16 @@ color:
 # Footer settings
 footer:
   copyright: Rick Farouni
-  social: Links
   credits: Credits
+# social: Links
+
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
-social:
-  - title: slack
-    url: https://psych7821.slack.com
-  - title: github
-    url: https://github.com/rfarouni/PSYCH7821
+#social:
+#  - title: slack
+#    url: https://psych7821.slack.com
+#  - title: github
+#    url: https://github.com/rfarouni/PSYCH7821
 
 # Postal address (add as many lines as necessary)
 #address:
