@@ -1,0 +1,30 @@
+id site    y1  y2  y3  y4
+1  Local   29  22  33  11
+2  Local   31   0   1   6
+3  Local   10  20  25  86
+4  Local   37   6   0   7
+5  Local   27  23  23  23
+6  Local   71  56  27  20
+7  Local   32  29  18  12
+8  Local    0   .   0  22
+9  Local   48  36  30  35
+10 Local    7   2  14  21
+11 Local   73  72  66  80
+12 Local   14  25  67  15
+13 Local   13  50  24  12
+14 General 23  11  17  30
+15 General 53  49  61  45
+16 General 48  69  19  22
+17 General 58   2  24   1
+18 General 12   4  10   1
+19 General 55  69  28  22
+20 General  .  50   8  12
+21 General 28  46  10  38
+22 General 63  43  36  31
+23 General 41  41  14  31
+24 General 47  28  31  21
+25 General 24  36  27  23
+26 General 28  20  33  74
+27 General 35   0   2  12
+
+
