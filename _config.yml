@@ -1,10 +1,10 @@
 # Site settings
-title: Covariance Structure Models
-heading: Covariance Structure Models
+title: Repeated Measures
+heading: Repeated Measures 
 email: farouni.1@osu.edu
-url: http://rfarouni.github.io/PSYCH7821
+url: http://rfarouni.github.io/repeated_measures
 baseurl: "/PSYCH7821"
-description: "Welcome to the Course Website for PSYCH 7821 (AU2016)"
+description: "Welcome to the Course Website for PSYCH 7823 (SP2017)"
 
 
 # List of links in the navigation bar
