@@ -9,25 +9,17 @@ layout: default
 <br>
 
 
-## Explained Visually
+## Cheatsheets
 
 <hr class="star-primary">
 
 
-* [Ordinary Least Squares Regression](http://setosa.io/ev/ordinary-least-squares-regression/){:target="_blank"}: interactive visual explanation of OLS regression.
+* [Data Visualization with ggplot2](https://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf){:target="_blank"}: ggplot cheatsheet.
 
-* [Principle Component Analysis](http://setosa.io/ev/principal-component-analysis/){:target="_blank"}: interactive visual explanation of PCA.
+* [Data Wrangling with dplyr and tidyr](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf){:target="_blank"}: dplyr and tidyr cheatsheet.
 
-* [Eigenvectors and Eigenvalues](http://setosa.io/ev/principal-component-analysis/){:target="_blank"}: interactive visual explanation of eigenvectors and eigenvalues.
+* [R Markdown](http://setosa.io/ev/principal-component-analysis/){:target="_blank"}: R Markdown cheat sheet.
 
-<br>
-<br>
-
-## Stack Exchange
-
-<hr class="star-primary">
-
-* [PCA and Eigenvalues](http://stats.stackexchange.com/questions/2691/making-sense-of-principal-component-analysis-eigenvectors-eigenvalues/140579?stw=2#140579){:target="_blank"}: a forum post providing an intuition behind PCA.
 
 <br>
 <br>
