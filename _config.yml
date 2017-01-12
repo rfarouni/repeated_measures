@@ -9,7 +9,7 @@ description: "Welcome to the Course Website for PSYCH 7823 (SP2017)"
 
 # List of links in the navigation bar
 navbar-links:
-  Posts: "posts"
+  Assignments: "assignments"
   Resources: "resources"
 
 
