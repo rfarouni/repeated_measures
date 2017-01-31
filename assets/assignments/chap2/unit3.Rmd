@@ -1,0 +1,92 @@
+---
+title: "Examples for Unit 3"
+output:
+  html_notebook: default
+---
+## Example 1
+
+### Step 1: Load required libraries
+
+```{r, message=FALSE}
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+library("nlme")
+```
+
+### Step 2: Load data
+
+```{r}
+df_wide <- read.table("wells_addition_data.txt", 
+                   header = TRUE,
+                   na.strings = ".")
+df_wide
+```
+
+
+### Step 3: Trasform data format
+
+Trasform the wide format into long format.The folowing function gathers columns 3 to 6 into rows. In place of the four variable y1-y4, we get two variables, a key-value pair named *period* and *score*.
+
+```{r}
+colnames(df_wide) <- c("id",  "sex", "0",  "3",  "6",  "9")
+
+df_long <- gather(data = df_wide ,
+                         key = "period",
+                         value = "score",
+                         3:6)
+
+# change type of variables into factors
+df_long  <- within(df_long, {
+  id <- factor(id)
+  period <- as.integer(period)
+})
+
+df_long
+```
+
+
+### Step 4: Plot data
+
+To create a side by side spaghetti plot for each site, we use the ggplot function. In each plot, the pain variable is on the the y-axis and period is on the x-axis. By grouping by id (i.e. suject), each plot renders the line curves for all the individual on the same plot.
+```{r}
+ ggplot(data = df_long, aes(x = period , y = score, group = id)) +
+  geom_line(aes(colour = id), size = 0.2) +
+  facet_grid(. ~ sex) + 
+  xlab("Follow up Periods") +
+  ylab("Number Correct") +
+  ggtitle("Data from Wells' study of learning on a power test of simple arithmetic items") 
+```
+
+### Step 5: Fit Model
+
+Here we fit a linear model with unstructured covariance matrix using generalized least squares. The "REML" method  fits the model by maximizing the restricted log-likelihood.
+
+```{r}
+glsREML <- gls(score~ period, 
+            data = df_long , 
+            correlation = corSymm(form = ~ 1 |id),
+            weights = varIdent(form = ~ 1 | period),
+            method = "REML")
+
+summary(glsREML)
+```
+
+We can use the *getVarCov* function to extract the variance-covariance matrix from a fitted model.
+
+```{r}
+getVarCov(glsREML)
+```
+
+We can also fit the model using maximum likelihood in which the log-likelihood is maximized.
+
+```{R}
+glsML <- update(glsREML, method = "ML")
+summary(glsML)
+```
+The variance-covariance matrix in this case is
+```{r}
+getVarCov(glsML)
+```
+
+

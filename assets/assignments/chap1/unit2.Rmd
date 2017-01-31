@@ -1,0 +1,214 @@
+---
+title: "Examples for Unit 2"
+output:
+  html_notebook: default
+---
+## Example 1
+
+### Step 1: Load required libraries
+
+```{r, message=FALSE}
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+```
+
+### Step 2: Load data
+
+```{r}
+df_wide <- read.table("backpain.txt", 
+                   header = TRUE,
+                   na.strings = ".")
+df_wide
+```
+
+### Step 3: Trasform data format
+
+Trasform the wide format into long format.The folowing function gathers columns 3 to 6 into rows. In place of the four variable y1-y4, we get two variables, a key-value pair named *period* and *pain*.
+
+```{r}
+df_long <- gather(data = df_wide ,
+                         key = "period",
+                         value = "pain",
+                         3:6)
+
+# change type of variables into factors
+df_long  <- within(df_long, {
+  id <- factor(id)
+  period <- factor(period)
+})
+
+df_long
+```
+
+### Step 4: Plot data
+
+To create a side by side spaghetti plot for each site, we use the ggplot function. In each plot, the pain variable is on the the y-axis and period is on the x-axis. By grouping by id (i.e. suject), each plot renders the line curves for all the individual on the same plot.
+```{r}
+ ggplot(data = df_long, aes(x = period , y = pain, group = id)) +
+  geom_line(aes(colour = id), size = 0.2) +
+  facet_grid(. ~ site) + 
+  xlab("Follow up Periods") +
+  ylab("Pain Level") +
+  ggtitle("Patient Self-reported Back Pain by Administration Site") +
+  theme(legend.position = "none")
+```
+
+
+
+### Step 5: Perform t-tests
+
+Calculate the mean of self reported pain grouped by *site* and *subject*.  We use the the pipe operator to simplify the code. Here x %>% f is equivalent to f(x) and  x %>% f(y) is equivalent to f(x,y). Piping becomes really useful when you have multiple nested operationssuch as  f(g(l(x))) where f, g, and l are functions.
+
+```{r}
+df_long_means <- df_long %>%
+  group_by(site, id) %>%
+  summarise(pain_avg = mean(pain,
+                       na.rm = TRUE))
+df_long_means 
+```
+
+Although equal variance is not the default setting, we set *var.equal* to TRUE in order to reproduce the results in the class notes. The regression notation *"pain_avg~site"* should remind you that we working with a linear model.
+```{r}
+t.test(pain_avg~site,
+       data = df_long_means,
+       var.equal = TRUE)
+```
+
+We select the rows corresponding to the last period with the filter function.
+
+```{r}
+df_long_last <- df_long %>% filter(period == "y4")
+df_long_last
+```
+
+We run a t-test with the filtered dataset
+```{r}
+t.test(pain ~ site, 
+       data = df_long_last, 
+       var.equal = TRUE)
+```
+
+
+## Example 2
+
+### Step 1: Load data
+
+```{r}
+BPRS_df_wide <- read.table("BPRS_data.txt", 
+                   header = TRUE,
+                   na.strings = ".")
+BPRS_df_wide
+```
+
+### Step 2: Trasform data format.
+
+
+```{r}
+BPRS_df_long <- gather(data = BPRS_df_wide ,
+                         key = "week",
+                         value = "score",
+                         3:11)
+# change type of variables into factors
+BPRS_df_long  <- within(BPRS_df_long, {
+  group <- factor(group, labels = c("Group 1", "Group 2"))
+  id <- factor(id)
+  week <- factor(week)
+})
+BPRS_df_long
+```
+
+
+### Step 3: Plot data
+
+
+```{r}
+ggplot(data = BPRS_df_long, aes(x = week , y = score, group = id)) +
+  geom_line(aes(colour = id), size = 0.2) +
+  facet_grid(  ~ group) + 
+  xlab("Week") + 
+  ylab("Scores") + 
+  ggtitle("Brief Psychiatric Rating Scale Data")  +
+  theme(legend.position = "none")
+```
+
+We use facets to plot the data for each individual
+
+```{r}
+ggplot(data = BPRS_df_long, 
+       aes(x = week , 
+           y = score, 
+           group = group)) +
+  geom_point(aes(colour = group),
+            size = 0.4) +
+  geom_smooth(method = 'lm', size = 0.1) +
+  facet_wrap(  ~ id, ncol = 8) + 
+  xlab("Week") + 
+  ylab("Scores") + 
+  ggtitle("Brief Psychiatric Rating Scale Data")   +
+  theme(axis.text.x = element_text(size = 4))
+```
+## Example 3
+
+### Step 1: Load data
+
+```{r}
+depression_df_wide <- read.table("depression.txt", 
+                   header = TRUE,
+                   na.strings = ".")
+depression_df_wide
+```
+
+### Step 2a: Trasform data format
+
+```{r}
+depression_df_long_months <- gather(data = depression_df_wide ,
+                         key = "period",
+                         value = "score",
+                         5:8)
+# change type of variables into factors
+depression_df_long_months  <- within(depression_df_long_months, {
+  group <- factor(group)
+  id <- factor(id)
+  period <- factor(period)
+})
+depression_df_long_months
+
+```
+### Step 3a: Perform a Single-Sample Repeated Measures Anova 
+
+The syntax *period\*group* is equivalent to *period+ group + period:group* where  *period:group* denotes an interaction. The Error term specifies which effects are seen within subjects (id). Here we specify a random effect of time periods inside subjects: Error(id/period). The "/period" can be omitted. The speficication for the Anova model is basically a randomized complete blocks design or more precisely a split-plot since the subjects in Group 1 and Group 2 are not the same 
+```{r}
+fit1 <- aov( score ~ period*group + Error(id/period), 
+             data = depression_df_long_months)
+summary(fit1)
+```
+
+
+### Step 2b: Trasform data format
+
+We now need to collapse the two baseline variables into a single column
+```{r}
+depression_df_long_baseline <- gather(data = depression_df_wide ,
+                         key = "baseline",
+                         value = "score",
+                         3:4)
+# change type of variables into factors
+depression_df_long_baseline  <- within(depression_df_long_baseline, {
+  group <- factor(group)
+  id <- factor(id)
+  baseline <- factor(baseline)
+})
+depression_df_long_baseline
+
+
+```
+
+### Step 3b: Perform a Single-Sample Repeated Measures Anova ()
+
+Here we fit the randomized blocks Anova. The group is a fixed effect. The baseline measurements are nested within subjects.
+```{r}
+fit2 <- aov( score ~ baseline*group + Error(id/baseline), 
+             data = depression_df_long_baseline)
+summary(fit2)
+```
