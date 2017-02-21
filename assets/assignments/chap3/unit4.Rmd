@@ -1,8 +1,8 @@
 ---
 title: "Examples for Unit 4"
 output:
-  html_document: default
   html_notebook: default
+  html_document: default
 ---
 
 ## Week 6a
@@ -101,33 +101,24 @@ skodak_wide
 ### Step 2: rearrange the data
 
 
-One way to obtain the 400 paired measurements (age-iq) for the 100 subjects is to gather each set of four variables seperatly then join the two long dataframes into one
+To obtain the 400 paired measurements (age-iq) for the 100 subjects, we use the reshape function with a list input in the varying argument to pair the columns
 
 ```{r}
-skodak_age <- 
-  skodak_wide %>%
-  gather(key = "occasion",
-         value = "age",
-         3:6) %>%
-  select(- starts_with("iq"))
 
-skodak_iq <- 
-  skodak_wide %>%
-  gather(key = "occasion",
-         value = "iq",
-         7:10) %>%
-  select(-starts_with("age"))
-
-skodak_long <- cbind(skodak_age, skodak_iq["iq"])
+skodak_long  <- reshape(skodak_wide, 
+                        direction = "long", 
+                        idvar = c("id", "gender"),
+                        varying = list(c(3:6), c(7:10)), 
+                        v.names = c("age", "iq"), 
+                        times = c("1", "2", "3", "4"))
 
 # change type of variables into factors
 skodak_long <- within(skodak_long, {
   id <- factor(id)
-  occasion <- factor(occasion)
+  gender <- factor(gender)
+  time <- factor(time)
 })
-
-#rename levels
-levels(skodak_long$occasion) <- c("1", "2", "3", "4")
+skodak_long 
 ```
 
 ### Step 3: Remove missing values
@@ -138,14 +129,29 @@ skodak_long_filtered  <- skodak_long %>% na.omit() %>% arrange(id)
 skodak_long_filtered 
 ```
 
+### Step 4: Plot data
+
+
+```{r}
+ ggplot(data = skodak_long_filtered , 
+        aes(x = age , y = iq, group = id)) +
+  geom_line(aes(colour = id), size = 0.2) +
+  facet_grid(. ~ gender) + 
+  xlab("Age") +
+  ylab("IQ") +
+  ggtitle(" Skodak IQ Data") +
+  theme(legend.position = "none")
+```
+
+
 ### Step 4: fit model
 
 ```{r}
 glsREML <- gls(iq ~ age , 
             data = skodak_long_filtered , 
             correlation = corSymm(form = ~ 1 |id),
-            weights = varIdent(form = ~ 1 | occasion),
-            method = "REML")
+            weights = varIdent(form = ~ 1 | time),
+            method = "ML")
 
 summary(glsREML)
 ```
