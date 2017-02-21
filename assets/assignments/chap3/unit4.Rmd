@@ -1,0 +1,97 @@
+---
+title: "Examples for Unit 4"
+output:
+  html_notebook: default
+---
+## Week 6a
+
+### Step 1: Load required libraries
+
+```{r, message=FALSE}
+library("data.table")
+library("tidyr")
+library("reshape2")
+library("ggplot2")
+library("nlme")
+```
+
+### Step 2: Load data
+
+```{r}
+df_wide <- fread("hdrs.txt", na.strings = ".")
+df_wide
+```
+
+
+### Step 3: Trasform data format
+
+Trasform the wide format into long format.The folowing function gathers columns 3 to 8 into rows. In place of the four variable y1-y4, we get two variables, a key-value pair named *week* and *score*.
+
+```{r}
+colnames(df_wide) <- c("id",  "group", "0", "1", "2", "3",  "4", "5")
+
+df_long <- gather(data = df_wide ,
+                         key = "week",
+                         value = "score",
+                         3:8)
+
+# change type of variables into factors
+df_long  <- within(df_long, {
+  id <- factor(id)
+  week <- as.integer(week)
+})
+
+df_long
+```
+
+
+### Step 4: Plot data
+
+To create a side by side spaghetti plot for each site, we use the ggplot function.  By grouping by id (i.e. suject), each plot renders the line curves for all the individual on the same plot.
+```{r}
+ ggplot(data = df_long, aes(x = week , y = score, group = id)) +
+  geom_line(aes(colour = id), size = 0.2) +
+  facet_grid(. ~ group) + 
+  xlab("Weeks") +
+  ylab("Rating") +
+  ggtitle(" Hamilton Depression Rating Scale scores") 
+```
+
+### Step 6: Remove Missing values
+
+```{r}
+df_long_filtered  <- na.omit(df_long)
+df_long_filtered
+```
+
+
+### Step 5: Fit Model
+
+Here we fit a linear model with unstructured covariance matrix using generalized least squares. The "REML" method  fits the model by maximizing the restricted log-likelihood.
+
+```{r}
+glsREML <- gls(score ~ week + group + week*group, 
+            data = df_long_filtered , 
+            correlation = corSymm(form = ~ 1 |id),
+            weights = varIdent(form = ~ 1 | week),
+            method = "REML")
+
+summary(glsREML)
+```
+
+
+We can also fit the model using maximum likelihood in which the log-likelihood is maximized.
+
+```{R}
+glsML <- update(glsREML, method = "ML")
+summary(glsML)
+```
+
+## Week 6b
+
+```{r}
+skodak_wide <- fread("skodak.txt", na.strings = ".")
+skodak_wide
+```
+
+

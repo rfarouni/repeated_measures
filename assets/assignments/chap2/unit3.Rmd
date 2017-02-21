@@ -80,6 +80,7 @@ getVarCov(glsREML)
 
 We can also fit the model using maximum likelihood in which the log-likelihood is maximized.
 
+
 ```{R}
 glsML <- update(glsREML, method = "ML")
 summary(glsML)
