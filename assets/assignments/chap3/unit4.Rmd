@@ -10,6 +10,7 @@ output:
 ```{r, message=FALSE}
 library("data.table")
 library("tidyr")
+library("dplyr")
 library("reshape2")
 library("ggplot2")
 library("nlme")
@@ -89,9 +90,61 @@ summary(glsML)
 
 ## Week 6b
 
+### Step 1: Load data
 ```{r}
 skodak_wide <- fread("skodak.txt", na.strings = ".")
 skodak_wide
 ```
 
+### Step 2: rearrange the data
 
+
+One way to obtain the 400 paired measurements (age-iq) for the 100 subjects is to gather each set of four variables seperatly then join the two long dataframes into one
+
+```{r}
+skodak_age <- 
+  skodak_wide %>%
+  gather(key = "occasion",
+         value = "age",
+         3:6) %>%
+  select(-starts_with("iq"))
+
+skodak_iq <- 
+  skodak_wide %>%
+  gather(key = "occasion",
+         value = "iq",
+         7:10) %>%
+  select(-starts_with("age"))
+
+skodak_long <- cbind(skodak_age, skodak_iq["iq"])
+
+# change type of variables into factors
+skodak_long <- within(skodak_long, {
+  id <- factor(id)
+  occasion <- factor(occasion)
+})
+
+#rename levels
+levels(skodak_long$occasion) <- c("1", "2", "3", "4")
+
+```
+
+### Step 3: Remove missing values
+
+Remove the missing values and order by id
+```{r}
+skodak_long_filtered  <- skodak_long %>% na.omit() %>% arrange(id)
+skodak_long_filtered 
+```
+
+### Step 4: fit model
+
+```{r}
+glsREML <- gls(iq ~ age , 
+            data = skodak_long_filtered , 
+            correlation = corSymm(form = ~ 1 |id),
+            weights = varIdent(form = ~ 1 | occasion),
+            method = "REML")
+
+summary(glsREML)
+```
