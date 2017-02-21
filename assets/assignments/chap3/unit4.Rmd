@@ -1,17 +1,19 @@
 ---
 title: "Examples for Unit 4"
 output:
+  html_document: default
   html_notebook: default
 ---
+
 ## Week 6a
 
 ### Step 1: Load required libraries
+
 
 ```{r, message=FALSE}
 library("data.table")
 library("tidyr")
 library("dplyr")
-library("reshape2")
 library("ggplot2")
 library("nlme")
 ```
@@ -29,7 +31,7 @@ df_wide
 Trasform the wide format into long format.The folowing function gathers columns 3 to 8 into rows. In place of the four variable y1-y4, we get two variables, a key-value pair named *week* and *score*.
 
 ```{r}
-colnames(df_wide) <- c("id",  "group", "0", "1", "2", "3",  "4", "5")
+colnames(df_wide) <- c("id",  "group", "0", "1", "2", "3", "4", "5")
 
 df_long <- gather(data = df_wide ,
                          key = "week",
@@ -107,7 +109,7 @@ skodak_age <-
   gather(key = "occasion",
          value = "age",
          3:6) %>%
-  select(-starts_with("iq"))
+  select(- starts_with("iq"))
 
 skodak_iq <- 
   skodak_wide %>%
@@ -126,7 +128,6 @@ skodak_long <- within(skodak_long, {
 
 #rename levels
 levels(skodak_long$occasion) <- c("1", "2", "3", "4")
-
 ```
 
 ### Step 3: Remove missing values
