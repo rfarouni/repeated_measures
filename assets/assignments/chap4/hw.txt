@@ -1,0 +1,15 @@
+Fit quadratic the mixed effects model to the NLSY Reading data, as described in Sec. 10, p. 21, of the class notes.  Estimates also on p. 21.  Data are in the Files section.  Due in class Thursday April 6
+
+--- Notes ---
+
+1) Shift the Age variable: Age = ActualAge - 6.
+
+2) Include the covariate SeeMeSoar only on betai0 and betai1
+
+3) Include random effects only on betai1 and betai2
+
+4) Report parameter estimates and standard errors
+
+5) In addition the the covariance between bi1 and bi2, also report the correlation between bi1 and bi2.  If your favorite stat program does not do this automatically, its easy to do by hand.
+
+rhojk = covjk / sqrt(varj * vark)

@@ -1,0 +1,154 @@
+---
+title: "HW Week 11"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+## Week 11
+
+### Step 1: Load required libraries
+
+
+```{r, message=FALSE}
+library("data.table")
+library("lme4")
+library("dplyr")
+library("ggplot2")
+library("lattice")
+```
+
+### Step 2: Load data
+
+```{r}
+NLSY_wide <- fread("NLSY.txt", na.strings = ".")
+NLSY_wide
+
+```
+
+
+### Step 3: Create New Column Variables
+
+Create 8 new column variables and remove the original two **m_age** and **age**
+
+```{r}
+NLSY_wide <- NLSY_wide %>% 
+  mutate(m_age1 = m_age,
+         m_age2 = m_age + 2,
+         m_age3 = m_age + 4,
+         m_age4 = m_age + 6,
+         c_age1 = age,
+         c_age2 = age + 2,
+         c_age3 = age + 4,
+         c_age4 = age + 6) %>% 
+  select(-c(m_age, age))
+
+NLSY_wide
+```
+
+### Step 3: Trasform data format
+
+We now transform the wide format into long format.The folowing function gathers Columns 2 to 5 into rows. In place of the four variable read1-read4, we get a **read_score** variable, the key is *id* and the corresponding value is **read_score**. Similiarly, Columns 10 to 13 collapse into **mother_age** and Columns 14 to 17 collapse into **child_age**. After reshaping the dataset, we remove rows containing missing values.
+```{r}
+NLSY_long <- NLSY_wide %>% 
+  reshape(direction = "long", 
+          idvar = c("id"),
+          varying = list(c(2:5), c(10:13), c(14:17)), 
+          v.names = c("read_score", "mother_age", "child_age"), 
+          times = c("1", "2", "3", "4")) %>%
+  na.omit()
+NLSY_long
+```
+
+Shift ages and change variable types
+
+```{r}
+NLSY_long <- within(NLSY_long, {
+  id <- factor(id)
+  boy <- factor(boy)
+  time <- factor(time)
+  mother_age <- mother_age - 6
+  child_age <- child_age - 6
+})
+
+```
+
+### Step 4: Plot data
+
+We now plot the data for the first 50 children
+```{r}
+
+temp_df <- NLSY_long %>% filter(id %in% NLSY_long$id[1:50])
+ggplot(data = temp_df , 
+       aes(x = child_age , 
+           y = read_score, 
+           group = boy)) +
+  facet_wrap( ~ id, ncol = 10) + 
+  geom_line(aes(colour = boy), size = 0.2) +
+  xlab("Age") +
+  ylab("Reading Score") +
+  ggtitle("NLSY Data") +
+  theme(legend.position = "none")
+```
+
+
+### Step 5: Fit Model
+
+Here we fit a mixed effect model with random slopes but fixed intercept.
+
+```{r}
+NLSY_fit1 <- lmer( read_score ~ child_age + I(child_age^2) + (0 + child_age + I(child_age^2)|id),
+                  data = NLSY_long,
+                  REML = FALSE)
+
+summary(NLSY_fit1)
+```
+
+Here we fit another model with the uncorrelated slopes. Note the double-bar notation.
+
+```{r}
+NLSY_fit2 <- lmer( read_score ~ child_age + I(child_age^2) + (0 + child_age + I(child_age^2)||id),
+                  data = NLSY_long,
+                  REML = FALSE)
+
+summary(NLSY_fit2)
+```
+
+We can compare the two models using the anova function.
+
+```{R}
+anova(NLSY_fit2, NLSY_fit1)
+
+```
+
+
+To extract the variances, simply run the following:
+
+```{R}
+(vc <- VarCorr(NLSY_fit1))
+print(vc, comp = c("Variance"))
+
+```
+
+### Step 6: Check Model
+
+Plot residuals vs fitted.
+
+```{R}
+plot(NLSY_fit1)
+```
+
+Plot the random effects. They should have a normal distribution.
+
+```{r}
+ranef_betas <- ranef(NLSY_fit1, condVar = TRUE)
+dotplot(ranef_betas)
+```
+
+To check normality assumption, we use the quantile-quantile plot of a sample against a theoretical distribution.
+
+```{r}
+qqmath(ranef_betas)
+
+```
+
