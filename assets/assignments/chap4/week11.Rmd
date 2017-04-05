@@ -94,7 +94,8 @@ ggplot(data = temp_df ,
 
 ### Step 5: Fit Model
 
-Here we fit a mixed effect model with random slopes but fixed intercept.
+Here we fit a mixed effect model with random slopes but fixed intercept. You can change to 1 to have a random effect on the intercept.
+
 
 ```{r}
 NLSY_fit1 <- lmer( read_score ~ child_age + I(child_age^2) + (0 + child_age + I(child_age^2)|id),
@@ -107,7 +108,7 @@ summary(NLSY_fit1)
 Here we fit another model with the uncorrelated slopes. Note the double-bar notation.
 
 ```{r}
-NLSY_fit2 <- lmer( read_score ~ child_age + I(child_age^2) + (0 + child_age + I(child_age^2)||id),
+NLSY_fit2 <- lmer( read_score ~ child_age + I(child_age^2) + (1 + child_age ||id),
                   data = NLSY_long,
                   REML = FALSE)
 
@@ -121,6 +122,7 @@ anova(NLSY_fit2, NLSY_fit1)
 
 ```
 
+Note that the REML depends the fixed effects  in the model. We should not compare models fit using REML if you change the fixed effects in your model. If the focus of your analysis is estimating the random effects, then REML is generally considered to give better estimates. Either way, it is better to fit your best model using REML for final inference. If you your two models have the same random effects structure, then to compare models with **Nested** fixed effects, use ML estimation and not REML.
 
 To extract the variances, simply run the following:
 
@@ -130,18 +132,20 @@ print(vc, comp = c("Variance"))
 
 ```
 
+To get the covariance, use the following fomula:  **Cov(i,j) = Corr(i,j)*Sigma(i)*Sigma(j)**
+
 ### Step 6: Check Model
 
 Plot residuals vs fitted.
 
 ```{R}
-plot(NLSY_fit1)
+plot(NLSY_fit2)
 ```
 
 Plot the random effects. They should have a normal distribution.
 
 ```{r}
-ranef_betas <- ranef(NLSY_fit1, condVar = TRUE)
+ranef_betas <- ranef(NLSY_fit2, condVar = TRUE)
 dotplot(ranef_betas)
 ```
 
@@ -151,4 +155,45 @@ To check normality assumption, we use the quantile-quantile plot of a sample aga
 qqmath(ranef_betas)
 
 ```
+
+### Extra Step 7: Computing Confidence intervals
+
+Computing confidence intervals can be done via Wald approximations (for fixed-effects parameters only), likelihood profiling, or parametric bootstrapping.  The boostrap confidence intervals can be computed using the following types, "norm", "basic", "perc", and "stud".  The percentile method ""perc" works if the bootstrap distribution is approximately symmetric and continuous, the other standard error methods also require that the distribution be approximately normal.
+
+```{r}
+confint_betas <- confint(NLSY_fit2,
+                         method = "boot",
+                         boot.type = "perc",
+                         level = 0.95,
+                         nsim = 500)
+confint_betas
+```
+
+#### Likelihood profiling
+
+Likelihood profiling continually varies the parameters in a model to find the bestfit by fixing one parameter and comparing the fit to a globally optimal fit (i.e. the model fit in which all parameters vary). The deviance (likelihood) profile **−2L_p()** can be computed as such
+
+```{r}
+likelihood_profile <- profile(NLSY_fit2) 
+head(likelihood_profile)
+```
+
+We can show the  profile zeta plot for each model parameter. Linearity implies that the approximate is valid.
+```{r}
+xyplot(likelihood_profile, aspect = 1.3, absVal = TRUE)
+```
+
+
+The profile pairs plot is another informative plot. It shows two-dimensional 50%, 80%, 90%, 95% and 99% marginal confidence regions based on the likelihood ratio. These correspond to pairwise joint confidence regions. In the plot, profile traces indicate the conditional estimates of each parameter. 
+
+```{r}
+splom(likelihood_profile)
+```
+We can also display an approximation of the probability density function of the sampling distribution for each parameter
+
+```{r}
+densityplot(likelihood_profile)
+```
+
+
 
